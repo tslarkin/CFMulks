@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<body>
+<style>
+    footer a {
+        text-decoration: none;
+        text-align: center;
+        font-size: 16px;
+    }
+    .current {
+        pointer-events: none;
+        cursor: default;     
+    }
+    #ellipsis a {
+        font-size: 16px;
+        text-decoration: none;
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 2em;
+        height: 1em;
+        text-decoration: none;
+        text-align: center;
+        padding: 5px;
+        margin: 3px;
+    }
+</style>
+{% load static %}
+
+<h1>Page {{ page_obj.number }}</h1>
+{% block content %}
+
+<div style="margin-bottom: 150px; display:flex; flex-flow: row wrap; justify-content: space-evenly;
+    align-items: center;">
+{% for page in  page_obj %}
+
+<figure style="text-align:center;">
+    <img style="width: auto; height:60vh" src="{% static 'img/' %}{{page.notebook.name}}/{{page.name}}"/>
+    <figcaption style="font-size: 16px; text-align: center">
+        {{page.notebook.name}}/{{page.name}}
+    </figcaption>
+</figure>
+
+{% endfor %}
+</div>
+{% endblock %}
+{% block pagination %}
+<!-- https://realpython.com/django-pagination/ -->
+<footer style="background-color: white; width:100%; text-align: center; position:fixed; bottom:0; padding-bottom: 30px">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">
+            ⏮️
+        </a>
+        <a href="?page={{page_obj.previous_page_number}}">
+            ◀️
+        </a>
+    {% endif%}
+
+    <span id="jump" style="font-size:16px" contenteditable="true">
+        <form method="POST" action="" style="display:inline">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="jump">
+            <input  style="font-family: Times; width: 40px; text-align:right; font-size: 16px;" 
+                name="page_num" min=1 max={{page_obj.paginator.num_pages}} type="number" value={{ page_obj.number}}>
+        </form>    
+    </span> <span style="font-size:16px">of {{page_obj.paginator.num_pages}}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{page_obj.next_page_number}}">
+            ▶️
+        </a>
+        <a href="?page={{page_obj.paginator.num_pages}}">
+            ⏭️
+        </a>
+    {% endif%}
+
+    <div id="ellipsis" style="margin-top: 5px">
+    {% for page_number in paginator_range %}
+        {% if page_number == page_obj.paginator.ELLIPSIS %}
+            {{page_number}}
+        {% else %}
+             <a
+                href="?page={{page_number}}"
+                class="{% if page_number == page_obj.number %} current {% endif %}"
+            >
+                {{page_number}}
+            </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+</footer>
+{% endblock %}
+<!--
+<script>
+    let jmp=document.getElementById('jmp');
+    jmp.addEventListener('keydown', function(event) {
+        if (event.key == 'Enter') {
+            let value = jmp.textContent;
+    // https://stackoverflow.com/questions/5999118/how-can-i-add-or-update-a-query-string-parameter
+            const url = new URL(location.href);
+            url.searchParams.set('page', value)
+            location.replace(url);    
+        }
+    });
+</script>
+-->
+</body>
+</html>
