@@ -8,18 +8,20 @@
             "name": "Python Debugger: Django",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/CFMulks/manage.py",
+            "program": "manage.py",
             "args": [
                 "runserver"
             ],
             "django": true,
+            "cwd": "${workspaceFolder}/CFMulks"
         },
         {
             "name": "Python Debugger: Custom Command",
             "type": "debugpy",
             "request": "launch",
-            "program": "${workspaceFolder}/CFMulks/manage.py",
-            "args": ["update_notebooks"]
+            "program": "manage.py",
+            "args": ["update_notebooks"],
+            "cwd": "${workspaceFolder}/CFMulks",
         }
     ]
 }

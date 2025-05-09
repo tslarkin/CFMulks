@@ -23,5 +23,5 @@ from Notebooks import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pages/', views.PageListView.as_view(), name='page'),
+    path('scan/', views.ScanListView.as_view(), name='scan'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

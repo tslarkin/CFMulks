@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<body>
+<body style="font-family: 'Open Sans', system-ui; font-size: 16px; padding: 0 50px">
 <style>
     footer a {
         text-decoration: none;
@@ -22,39 +22,49 @@
         padding: 5px;
         margin: 3px;
     }
+    input {
+        padding: 3px 3px;
+        margin-top: 3px;
+        margin-bottom: 8px;
+        box-sizing: border-box;  
+        font-size: inherit;    
+    }
 </style>
 {% load static %}
 
 <h1>Page {{ page_obj.number }}</h1>
 {% block content %}
 
-<div style="margin-bottom: 150px; display:flex; flex-flow: column wrap; justify-content: space-evenly;
+<div style="margin-bottom: 100px; display:flex; flex-flow: column wrap; justify-content: space-evenly;
     align-items: center;">
-{% for page in  page_obj %}
+{% for scan in  page_obj %}
 
-<div style="display:flex; flex-flow:row wrap; justify-content:flex-start; align-tiems:flex-start; "
-<figure style="text-align:center;">
-    <img style="width: auto; height:60vh" src="{% static 'img/' %}{{page.notebook.name}}/{{page.name}}"/>
-    <figcaption style="font-size: 16px; text-align: center">
-        {{page.notebook.name}}/{{page.name}}
-    </figcaption>
-</figure>
-<form action="" method="POST">
+<div style="width: 100%; margin-bottom: 50px; display:flex; flex-flow:row wrap; justify-content:flex-start; align-tiems:flex-start; ">
+<form style="display:flex; flex-flow:column nowrap" action="" method="POST">
     {% csrf_token %}
-    <input type="hidden" name="id" value=page.id>
-    <input type="hidden" name="form_type" value="page_update">
-    <table>
-        {{ form.as_table}}
-    </table>
-    <input type="submit" value="Submit">
+    <h2>Book {{scan.notebook.name}} / {{scan.file}}</h2>
+    <input name="page_num" type="hidden" value={{ page_obj.number}}>
+    <input type="hidden" name="id" value={{scan.id}}>
+    <input type="hidden" name="form_type" value="scan_update">
+    <label for="seq_num">Sequence</label>
+    <input id="seq_num" type="number" name="seq_num" value="{{scan.seq_num}}" style="width: 60px">
+    <label for="description">Description</label>
+    <textarea style="font-size: inherit" id="description" name="description" rows="5" cols="40">{{scan.description}}</textarea>
+    <label for="transcription">Transcription</label>
+    <textarea style="font-size: inherit" id="transcription" name="transcription" rows="15" cols="40">{{scan.transcription}}</textarea>
+    <input style="font-size:inherit" type="submit" value="Submit">
 </form>
-
+<figure style="display:block; text-align:center; display:flex; flex-flow:column">
+    <img style="width: auto; height:60vh" src="{% static 'img/' %}{{scan.notebook.name}}/{{scan.file}}"/>
+</figure>
+</div>
 {% endfor %}
 </div>
 {% endblock %}
 {% block pagination %}
 <!-- https://realpython.com/django-pagination/ -->
-<footer style="background-color: white; width:100%; text-align: center; position:fixed; bottom:0; padding-bottom: 30px">
+<footer style="border:1px solid black; background-color: white; width:90%; 
+text-align: center; position:fixed; bottom:0; padding: 15px 0 30px">
     {% if page_obj.has_previous %}
         <a href="?page=1">
             ⏮️
@@ -64,11 +74,11 @@
         </a>
     {% endif%}
 
-    <span id="jump" style="font-size:16px" contenteditable="true">
-        <form method="POST" action="" style="display:inline">
+    <span id="jump">
+        <form method="POST" action="" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="jump">
-            <input  style="font-family: Times; width: 40px; text-align:right; font-size: 16px;" 
+            <input  style="font-size:inherit; width: 40px; text-align:right;" 
                 name="page_num" min=1 max={{page_obj.paginator.num_pages}} type="number" value={{ page_obj.number}}>
         </form>    
     </span> <span style="font-size:16px">of {{page_obj.paginator.num_pages}}</span>
