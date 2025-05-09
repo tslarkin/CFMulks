@@ -28,16 +28,26 @@
 <h1>Page {{ page_obj.number }}</h1>
 {% block content %}
 
-<div style="margin-bottom: 150px; display:flex; flex-flow: row wrap; justify-content: space-evenly;
+<div style="margin-bottom: 150px; display:flex; flex-flow: column wrap; justify-content: space-evenly;
     align-items: center;">
 {% for page in  page_obj %}
 
+<div style="display:flex; flex-flow:row wrap; justify-content:flex-start; align-tiems:flex-start; "
 <figure style="text-align:center;">
     <img style="width: auto; height:60vh" src="{% static 'img/' %}{{page.notebook.name}}/{{page.name}}"/>
     <figcaption style="font-size: 16px; text-align: center">
         {{page.notebook.name}}/{{page.name}}
     </figcaption>
 </figure>
+<form action="" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="id" value=page.id>
+    <input type="hidden" name="form_type" value="page_update">
+    <table>
+        {{ form.as_table}}
+    </table>
+    <input type="submit" value="Submit">
+</form>
 
 {% endfor %}
 </div>
