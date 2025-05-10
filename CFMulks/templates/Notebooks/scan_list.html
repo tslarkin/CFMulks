@@ -39,7 +39,7 @@
     align-items: center;">
 {% for scan in  page_obj %}
 
-<div style="width: 100%; margin-bottom: 50px; display:flex; flex-flow:row wrap; justify-content:flex-start; align-tiems:flex-start; ">
+<div id="loop item" style="width: 100%; margin-bottom: 50px; display:flex; flex-flow:row wrap; justify-content:flex-start; align-tiems:flex-start; ">
 <form style="display:flex; flex-flow:column nowrap" action="" method="POST">
     {% csrf_token %}
     <h2>Book {{scan.notebook.name}} / {{scan.file}}</h2>
@@ -55,7 +55,7 @@
     <input style="font-size:inherit" type="submit" value="Submit">
 </form>
 <figure style="display:block; text-align:center; display:flex; flex-flow:column">
-    <img style="width: auto; height:60vh" src="{% static 'img/' %}{{scan.notebook.name}}/{{scan.file}}"/>
+    <img style="width: auto; height:60vh" src="http://abstracttools.com/Django/static/img/{{scan.notebook.name}}/{{scan.file}}"/>
 </figure>
 </div>
 {% endfor %}
