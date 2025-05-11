@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from .models import Notebook, Scan
 from django.views.generic import ListView
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 
 
 def pages(request):
@@ -40,6 +40,7 @@ class ScanListView(ListView):
             if form_type == 'scan_update':
                 scan_id = request.POST.get("id")
                 scan = Scan.objects.get(pk=int(scan_id))
+                anchor = scan.file
                 transcription = request.POST.get("transcription")
                 description = request.POST.get("description")
                 seq_num = request.POST.get("seq_num")
@@ -47,6 +48,7 @@ class ScanListView(ListView):
                 scan.transcription = transcription
                 scan.description = description
                 scan.save()
+                return HttpResponseRedirect("#"+anchor)
             page_number = request.POST.get("page_num", 1)
             target = "/scan/"+"?page="+str(page_number)
             return redirect(target)
