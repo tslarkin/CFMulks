@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .models import Notebook, Scan
 from django.views.generic import ListView
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 
 def pages(request):
@@ -18,6 +19,7 @@ def pages(request):
     }
     return render(request, 'page.html', data)
 
+@login_required
 class ScanListView(ListView):
     paginate_by = 5
     model = Scan
