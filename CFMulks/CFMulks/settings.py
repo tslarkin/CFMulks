@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-fyf89yv3)(n299v^v*#&e3gsl^u4_2ga(bbw-aq7_8$eyd-uub
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cfmulks-production.up.railway.app', 'https://cfmulks-production.up.railway.app',]
-CSRF_TRUSTED_ORIGINS = ['cfmulks-production.up.railway.app', 'https://cfmulks-production.up.railway.app',]
+ALLOWED_HOSTS = ['https://cfmulks-production.up.railway.app','cfmulks-production.up.railway.app', ]
+CSRF_TRUSTED_ORIGINS = ['https://cfmulks-production.up.railway.app', 'cfmulks-production.up.railway.app', ]
 
 # Application definition
 
