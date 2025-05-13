@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand 
-from Notebooks.models import Notebook, Page
+from Notebooks.models import Notebook, Scan
 import os
 
 class Command(BaseCommand):
@@ -19,7 +19,7 @@ class Command(BaseCommand):
                 current_notebook = hits.first()
             print(current_notebook)
             path = base+file
-            current_notebook_pages = { p.name for p in current_notebook.page_set.all() }
+            current_notebook_pages = { p.file for p in current_notebook.scan_set.all() }
             if os.path.isdir(path):
                 if file[0] == '.':
                     continue
@@ -29,5 +29,5 @@ class Command(BaseCommand):
                 for img_name in to_add:
                     if img_name[0] == '.':
                         continue
-                    Page.objects.create(name=img_name, notebook=current_notebook)
-                current_notebook.page_set.filter(name__in=to_delete).delete()
+                    Scan.objects.create(file=img_name, notebook=current_notebook)
+                current_notebook.scan_set.filter(file__in=to_delete).delete()
