@@ -118,16 +118,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
+# configured according to the Railway doc: 
+# https://docs.railway.com/guides/django#configure-database-static-files--dependencies
 STATIC_URL = 'static/'
 STATICFILES_DIRS =  [ BASE_DIR / 'static', ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
-#STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-#STORAGES = {
-    # ...
-#    "staticfiles": {
-#        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-#    },
-# }
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
