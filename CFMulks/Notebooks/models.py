@@ -1,4 +1,5 @@
 from django.db import models
+import re
 
 class Notebook(models.Model):
     name = models.CharField(max_length=50)
@@ -14,3 +15,7 @@ class Scan(models.Model):
 
     def __str__(self):
         f"Scan {self.name}"
+
+    def name(self):
+        x = re.match(r'(.+).jpe?g', self.file)
+        return x[1]

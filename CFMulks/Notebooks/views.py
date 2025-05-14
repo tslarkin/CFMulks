@@ -1,23 +1,13 @@
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from .models import Notebook, Scan
-from django.views.generic import ListView
+from django.views.generic import View, ListView
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-def pages(request):
-    all = Scan.objects.all().order_by('name')
-    paginator = Paginator(all, 3)
-    page_num = int(request.GET.get('page', 1))
-    page_num = max(page_num, 1)
-    page_num = min(page_num, paginator.num_pages)
-    page = paginator.page(page_num)
-    data = {
-        'page': page.object_list[0],
-        'page_num': page.number,
-    }
-    return render(request, 'page.html', data)
+def home(request):
+    return render(request, 'Notebooks/home.html')
 
 class ScanListView(LoginRequiredMixin, ListView):
     paginate_by = 5

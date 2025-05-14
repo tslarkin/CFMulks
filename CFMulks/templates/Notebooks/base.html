@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <title>
+    {% block title %}CFMulks Notebooks{% endblock %}
+  </title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css' %}/styles.css"
+</head>
+<header>
+    <nav>
+    {% block nav %}
+    <a href="/admin">Admin</a>
+    {% endblock nav%}
+    <hr>
+    </nav>
+</header>
+<body>
+<div id="content">
+  {% block content %}
+  {% endblock content %}
+</div>
+{% block  footer %}
+{% endblock  %}
+</body>
+</html>

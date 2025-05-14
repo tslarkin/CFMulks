@@ -1,22 +1,19 @@
+{% extends "Notebooks/base.html" %}
 {% load static %}
+{% block nav %}
+<a href="/home/">Home</a>
+{% endblock nav %}
 
-<!DOCTYPE html>
-<head>
-    <link rel="stylesheet" type="text/css" href="{% static 'css' %}/styles.css"
-</head>
-
-<body style="font-family: 'Open Sans', system-ui; font-size: 16px; padding: 0 50px">
-
-<h1>Page {{ page_obj.number }}</h1>
 {% block content %}
 
-<div>
+<h1>Sheet {{ page_obj.number }}</h1>
+
 {% for scan in  page_obj %}
+<h2>Book {{scan.notebook.name}} / {{scan.name}}</h2>
 
 <div id="{{scan.file}}" class="scanform" >
 <form method="POST">
     {% csrf_token %}
-    <h2>Book {{scan.notebook.name}} / {{scan.file}}</h2>
     <input name="page_num" type="hidden" value={{ page_obj.number}}>
     <input type="hidden" name="id" value={{scan.id}}>
     <input type="hidden" name="form_type" value="scan_update">
@@ -33,9 +30,10 @@
 </figure>
 </div>
 {% endfor %}
-</div>
-{% endblock %}
-{% block pagination %}
+
+{% endblock content %}
+
+{% block footer %}
 <!-- https://realpython.com/django-pagination/ -->
 <footer>
     {% if page_obj.has_previous %}
@@ -81,19 +79,3 @@
     </div>
 </footer>
 {% endblock %}
-<!--
-<script>
-    let jmp=document.getElementById('jmp');
-    jmp.addEventListener('keydown', function(event) {
-        if (event.key == 'Enter') {
-            let value = jmp.textContent;
-    // https://stackoverflow.com/questions/5999118/how-can-i-add-or-update-a-query-string-parameter
-            const url = new URL(location.href);
-            url.searchParams.set('page', value)
-            location.replace(url);    
-        }
-    });
-</script>
--->
-</body>
-</html>
