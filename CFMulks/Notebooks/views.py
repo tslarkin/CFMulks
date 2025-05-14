@@ -19,7 +19,7 @@ def pages(request):
     }
     return render(request, 'page.html', data)
 
-class ScanListView(ListView):
+class ScanListView(LoginRequiredMixin, ListView):
     paginate_by = 5
     model = Scan
 
