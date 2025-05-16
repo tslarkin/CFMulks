@@ -4,7 +4,27 @@ from .models import Notebook, Scan
 from django.views.generic import View, ListView
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm
 
+def logout_view(request):
+    logout(request)
+    return redirect('/')
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/')  # Redirect to the home page after successful login
+        else:
+             return render(request, 'registration/login.html', {'error': 'Invalid credentials'}) # Render login page with error message
+    # GET branch
+    form = AuthenticationForm()
+    return render(request, 'registration/login.html', {'form': form}) # Render login page for GET requests
 
 def home(request):
     return render(request, 'Notebooks/home.html')

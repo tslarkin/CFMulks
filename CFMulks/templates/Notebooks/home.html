@@ -1,8 +1,13 @@
 {% extends "Notebooks/base.html" %}
 {% block nav %}
 {{block.super}}
-<a href="scan/">Edit</a>
+{% if user.is_authenticated %}
+    <a href="scan/">Edit</a>
+{% endif %}
 {% endblock nav %}
 {% block content %}
-<h1>Charles Freer Mulks Notebooks</h1>
+<h1>The Notebooks of Charles Freer Mulks</h1>
+<p>Charles Mulks was born 17 December in Caroline, New York and died in Ithaca, New York in 1907. His Notebooks
+    and scrapbooks are housed in <a href="https://rare.library.cornell.edu/the-carl-a-kroch-library/">The Carl A. Kroch  Library</a> at Cornell University.
+</p>
 {% endblock content %}
