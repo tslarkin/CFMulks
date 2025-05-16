@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Notebooks',
     'whitenoise.runserver_nostatic',
-]
+    'Notebooks',
+ ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,9 +120,10 @@ USE_TZ = True
 
 # configured according to the Railway doc: 
 # https://docs.railway.com/guides/django#configure-database-static-files--dependencies
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS =  [ BASE_DIR / 'static', ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE='whitenoise.storage.CampressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
