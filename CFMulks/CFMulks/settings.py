@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-fyf89yv3)(n299v^v*#&e3gsl^u4_2ga(bbw-aq7_8$eyd-uub'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'cfmulks-production.up.railway.app','https://cfmulks-production.up.railway.app', ]
 CSRF_TRUSTED_ORIGINS = ['https://cfmulks-production.up.railway.app',]
@@ -63,7 +63,7 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
+                'django.contrib.auth.context_processors.auth', 
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -78,11 +78,14 @@ WSGI_APPLICATION = 'CFMulks.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "railway",
+        "USER": "postgres",
+        "PASSWORD": "myjfsYfqDcbnbxbXzOqbJUmURcGRBzQH",
+        "HOST": "ballast.proxy.rlwy.net",
+        "PORT": "10452",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
