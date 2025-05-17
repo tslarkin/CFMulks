@@ -1,9 +1,13 @@
 from django.db import models
 import re
+from roman import toRoman
 
 class Notebook(models.Model):
     name = models.CharField(max_length=50)
     created = models.DateTimeField(auto_now_add=True)
+
+    def roman_numeral(self):
+        return toRoman(int(self.name))
 
 class Scan(models.Model):
     file = models.CharField(max_length=50)
@@ -19,3 +23,4 @@ class Scan(models.Model):
     def name(self):
         x = re.match(r'(.+).jpe?g', self.file)
         return x[1]
+
