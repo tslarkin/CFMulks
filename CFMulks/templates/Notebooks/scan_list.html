@@ -27,7 +27,7 @@
     {% if user.is_authenticated %}<input type="submit" value="Submit">{% endif %}
 </form>
 <figure style="">
-    <img style="width: auto; height:60vh" src="{% static 'img' %}/{{scan.notebook.name}}/{{scan.file}}"/>
+    <img src="{% static 'img' %}/{{scan.notebook.name}}/{{scan.file}}"/>
 </figure>
 </div>
 {% endfor %}
