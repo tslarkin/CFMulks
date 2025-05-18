@@ -60,7 +60,7 @@ class ScanListView(ListView):
             if form_type == 'scan_update':
                 scan_id = request.POST.get("id")
                 scan = Scan.objects.get(pk=int(scan_id))
-                anchor = scan.file
+                anchor = scan.name()
                 transcription = request.POST.get("transcription")
                 description = request.POST.get("description")
                 seq_num = request.POST.get("seq_num")
