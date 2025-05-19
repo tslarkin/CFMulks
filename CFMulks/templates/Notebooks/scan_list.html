@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<h1>Sheet {{ page_obj.number }}</h1>
+<h1>Set {{ page_obj.number }}</h1>
 
 {% for scan in  page_obj %}
 <h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>

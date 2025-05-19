@@ -21,6 +21,6 @@ class Scan(models.Model):
         f"Scan {self.name}"
 
     def name(self):
-        x = re.match(r'(.+).jpe?g', self.file)
+        x = re.match(r'IMG(_\d{4}).jpe?g', self.file)
         return x[1]
 
