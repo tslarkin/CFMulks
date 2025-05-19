@@ -1,12 +1,12 @@
 /* External style sheet */
 
 body {
-    margin-bottom: 100px; 
+    margin-bottom: 120px; 
     display:block; 
     font-family: 'Open Sans', system-ui; 
-    font-size: 18px; 
+    font-size: 1rem; 
     padding: 0 0px;
-    max-width: 800px;
+    max-width: 100vmax;
     line-height: 1.2rem;
 }
 #content, nav {
@@ -16,7 +16,6 @@ nav {
     font-family: inherit;
     font-size: 1.1rem;
     width:100%;
-    padding-top: 30px;
     display: flex;
     flex-flow:row nowrap; 
     justify-content:flex-start; 
@@ -59,16 +58,18 @@ input {
     margin-top: 3px;
     margin-bottom: 8px;
     box-sizing: border-box;  
-    font-size: inherit;    
-}
+ }
 form {
     display:flex; 
     flex-flow:column nowrap;
-}
+    width: 50vmax;
+ }
 figure {
     text-align:center; 
     display:flex; 
-    flex-flow:column
+    flex-flow:column;
+    overflow-x: scroll;
+    width: 50vmax;
 }
 .scanform {
     width: 100%; 
@@ -89,6 +90,6 @@ footer {
     text-align: center; 
     position:fixed; 
     margin-left: -9px;
-    padding: 20px 0;
+    padding: 30px 0 50px;
     bottom:0; 
  }
