@@ -7,9 +7,10 @@
   </title>
   <link rel="stylesheet" type="text/css" href="{% static 'css' %}/styles.css">
 </head>
-<header>
-    <nav>
+    {% block header %}
+    <header>
     {% block nav %}
+        <nav>
         {% if user.is_authenticated %}
             <div style="display: inline-block">{{user.first_name}} {{user.last_name}}:</div>
             <a href='/admin'>Admin</a>
@@ -25,9 +26,11 @@
         {% else %}
             <a href="{% url 'login' %}">Login</a>
         {% endif %}
+        </nav>
     {% endblock nav%}
-    </nav>
     <hr>
+    </header>
+    {% endblock header %}
 </header>
 <body>
 <div id="content">

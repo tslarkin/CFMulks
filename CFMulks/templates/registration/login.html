@@ -1,9 +1,10 @@
 {% extends "Notebooks/base.html" %}
-
+{% block nav %}
+{% endblock nav %}
 {% block content %}
 <h1>Login</h1>
 
-<form method="post">
+<form id="login_form" method="post">
   {% csrf_token %}
   {{form.as_p}}
   <button class="btn btn-dark" type="submit">Login</button>
