@@ -4,10 +4,10 @@ body {
     margin-bottom: 120px; 
     display:block; 
     font-family: 'Open Sans', system-ui; 
-    font-size: 1rem; 
+    font-size: 18px; 
     padding: 0 0px;
     max-width: 100vmax;
-    line-height: 1.2rem;
+    line-height: 1.2em;
 }
 #content, nav {
     padding: 20px 0 25px 20px;
