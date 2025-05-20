@@ -15,11 +15,11 @@
             <a href='/admin'>Admin</a>
             <form id="logout-form" method="post"
                 action="{% url 'logout' %}"
-                style="display: inline;">
+                style="display: inline; margin-top: -7px">
             {% csrf_token %}
             <button type="submit"
                 style="background: none; border: none; cursor: pointer;
-                    padding: 0; text-decoration: none;"
+                    padding: 0; text-decoration: none; font-family: inherit"
                 >Logout</button>
             </form>
         {% else %}

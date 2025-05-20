@@ -63,6 +63,7 @@ form {
     display:flex; 
     flex-flow:column nowrap;
     width: 50vmax;
+    font-family: inherit;
  }
 figure {
     text-align:center; 
