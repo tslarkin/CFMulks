@@ -16,12 +16,12 @@ body {
 nav {
     font-family: inherit;
     font-size: 1.1rem;
-    width:100%;
+    width:auto;
     display: flex;
     flex-flow:row nowrap; 
     justify-content:flex-start; 
-    align-items:flex-start; 
-    column-gap: 20px;
+    align-items:baseline; 
+    column-gap: 0px;
 }
 nav a {
     text-decoration: none;
@@ -59,6 +59,7 @@ input {
     padding: 3px 3px;
     margin-top: 3px;
     margin-bottom: 8px;
+    width: 100%;
     box-sizing: border-box;  
  }
 
@@ -73,6 +74,7 @@ figure {
     text-align:center; 
     overflow-x: scroll;
     margin-inline-end: 0;
+    margin-inline-start: 0;
    flex: 2 1 0px;
 }
 
@@ -102,15 +104,27 @@ footer {
     text-align: center; 
     position:fixed; 
     margin-left: -9px;
-    padding: 10px 0 50px;
+    padding: 10px 0 25px;
     bottom:0; 
+ }
+
+ form#logout-form  {
+    display: block;
+    flex:  0 1 0;
+ }
+
+ form#login_form {
+    display: flex;
+    flex-direction: column;
+    width: min-content;
  }
 
  #login_form p {
     margin-block-end: 0px;
     margin-block-start: 0px;
+    display: block;
  }
 
- #login_form button {
-    width: 200px;
- }
+#login_form .btn.btn-dark {
+    width: auto;
+}

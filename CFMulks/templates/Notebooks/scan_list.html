@@ -9,7 +9,7 @@
 {% for scan in  page_obj %}
 <h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>
 
-<div id="{{scan.name}}" style="display:flex;" >
+<div id="{{scan.name}}" style="display:flex; column-gap: 40px" >
 <form class="scanform" method="POST">
     {% csrf_token %}
     <input name="page_num" type="hidden" value={{ page_obj.number}}>
