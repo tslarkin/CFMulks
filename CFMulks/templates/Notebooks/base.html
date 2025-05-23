@@ -9,26 +9,26 @@
 </head>
     {% block header %}
     <header>
+    <nav>
     {% block nav %}
-        <nav>
+    
         {% if user.is_authenticated %}
-            <a href='/admin'>Admin</a>
-            <form id="logout-form" method="post" action="{% url 'logout' %}">
+            <a style="order: 0" href='/admin'>Admin</a>
+            <form id="logout-form" style="order: 1" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <!-- margin has to cancel the padding and margin of the hidden csrf_token input. -->
                 <button type="submit"
                     style="background: none; border: none; cursor: pointer;
-                        margin-top: -8px; text-decoration: none; font-family: inherit">
+                        text-decoration: none; font-family: inherit">
                     Logout
                 </button>
             </form>
-            <div style="flex: 1 1 0; text-align: right; display: inline-block">{{user.first_name}} {{user.last_name}}</div>
+            <div style="order: 10; flex: 1 1 0; text-align: right; display: inline-block">{{user.first_name}} {{user.last_name}}</div>
         {% else %}
             <a href="{% url 'login' %}">Login</a>
         {% endif %}
-        </nav>
-        <hr>
     {% endblock nav%}
+    </nav>
+    <hr>
     </header>
     {% endblock header %}
 </header>

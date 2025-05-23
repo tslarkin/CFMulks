@@ -1,7 +1,8 @@
 {% extends "Notebooks/base.html" %}
 {% load static %}
 {% block nav %}
-<a href="/">Home</a>
+{{ block.super }}
+<a style="order: 5" href="/">Home</a>
 {% endblock nav %}
 {% block content %}
 <h1>Page {{ page_obj.number }}</h1>
