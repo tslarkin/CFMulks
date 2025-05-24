@@ -16,16 +16,25 @@ body {
 nav {
     font-family: inherit;
     font-size: 1.1rem;
+    min-height: 40px;
     width:auto;
     display: flex;
     flex-flow:row nowrap; 
     justify-content:flex-start; 
     align-items:baseline; 
     column-gap: 20px;
+    color: white;
+    background-color: black;
+    padding: 10px 20px 7px 20px;
 }
 nav a {
     text-decoration: none;
 }
+
+nav a:visited, nav #logout-form button:visited {
+    color: white;
+}
+
 button {
     font-size: inherit;
 }

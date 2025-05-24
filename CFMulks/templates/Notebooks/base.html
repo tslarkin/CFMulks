@@ -13,11 +13,11 @@
     {% block nav %}
     
         {% if user.is_authenticated %}
-            <a style="order: 0" href='/admin'>Admin</a>
-            <form id="logout-form" style="order: 1" method="post" action="{% url 'logout' %}">
+            <a style="order: 1" href='/admin'>Admin</a>
+            <form id="logout-form" style="order: 2" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit"
-                    style="background: none; border: none; cursor: pointer;
+                    style="color: white; background: none; border: none; cursor: pointer;
                         text-decoration: none; font-family: inherit">
                     Logout
                 </button>
@@ -28,8 +28,7 @@
         {% endif %}
     {% endblock nav%}
     </nav>
-    <hr>
-    </header>
+     </header>
     {% endblock header %}
 </header>
 <body>
