@@ -70,6 +70,7 @@ class ScanListView(ListView):
                 scan.save()
                 return HttpResponseRedirect("#"+anchor)
             page_number = request.POST.get("page_num", 1)
-            target = "/scan/"+"?page="+str(page_number)
+            notebook_id = self.kwargs['notebook_id']
+            target = "/scan/"+str(notebook_id)+"/?page="+str(page_number)
             return redirect(target)
         return HttpResponse()

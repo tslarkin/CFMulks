@@ -24,7 +24,7 @@ from Notebooks import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('scan/<int:notebook_id>/<int:page>', views.ScanListView.as_view(), name='scan'),
+    path('scan/<int:notebook_id>/', views.ScanListView.as_view(), name='scan'),
     path("", views.home, name='home'),
     path('logout/', views.logout_view, name='logout'),
     path('login/', views.login_view, name='login'),

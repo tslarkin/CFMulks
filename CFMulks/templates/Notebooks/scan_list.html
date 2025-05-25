@@ -10,21 +10,40 @@
 {% for scan in  page_obj %}
 <h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>
 
-<div id="{{scan.name}}" style="display:flex; column-gap: 40px" >
+<div id="{{scan.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
+{% if user.is_authenticated %}
 <form class="scanform" method="POST">
     {% csrf_token %}
     <input name="page_num" type="hidden" value={{ page_obj.number}}>
     <input type="hidden" name="id" value={{scan.id}}>
     <input type="hidden" name="form_type" value="scan_update">
     <label for="seq_num">Sequence</label>
-    <input id="seq_num" type="number" name="seq_num" value="{{scan.seq_num}}" style="width: 60px"
+    <input onchange="inputChanged(this)" id="seq_num" type="number" name="seq_num" value="{{scan.seq_num}}" style="width: 60px"
     {% if not user.is_authenticated %}readonly{% endif %}>
-    <label for="description">Description</label>
-    <textarea id="description" name="description" rows="6" style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.description}}</textarea>
     <label for="transcription">Transcription</label>
-    <textarea id="transcription" name="transcription" rows="20"  style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.transcription}}</textarea>
-    {% if user.is_authenticated %}<input type="submit" value="Submit">{% endif %}
+    <textarea onchange="inputChanged(this)" id="transcription" name="transcription" rows="20"  style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.transcription}}</textarea>
+    <label for="description">Description</label>
+    <textarea onchange="inputChanged(this)" id="description" name="description" rows="6" style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.description}}</textarea>
+    {% if user.is_authenticated %}<input onchange("scanSubmitted(this)") id="submitscan" type="submit" value="Submit">{% endif %}
 </form>
+{% else %}
+<!-- Made this a form instead of a div to imitate the authorized user branch -->
+<form style="display:flex; flex-direction:column; flex-flow: column nowrap flex:1 1 0">
+    {% if scan.seq_num %}
+    <div style="margin-bottom: 3px; text-align: center">
+        {{ scan.seq_num }}
+    </div>
+    {% endif %}
+    {% if scan.transcription %}
+    <div style="white-space: pre-wrap">{{scan.transcription}}</div>
+    {% endif %}
+    {% if scan.description %}
+    <div style="font-style: italic; margin-top: 1em">
+        {{ scan.description }}
+    </div>
+    {% endif %}
+</form>
+{% endif %}
 <figure>
     <img src="{% static 'img' %}/{{scan.notebook.name}}/{{scan.file}}"/>
 </figure>

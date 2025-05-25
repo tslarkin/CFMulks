@@ -31,6 +31,10 @@ nav a {
     text-decoration: none;
 }
 
+.scan_not_submitted {
+    background: red;
+}
+
 nav a:visited, nav #logout-form button:visited {
     color: white;
 }
