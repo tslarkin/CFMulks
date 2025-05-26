@@ -1,4 +1,4 @@
-import markdown
+import markdown2
 
 from django import template
 from django.template.defaultfilters import stringfilter
@@ -6,9 +6,8 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
-@register.filter
+@register.filter(name='render_markdown')
 @stringfilter
 def render_markdown(value):
-    md = markdown.Markdown(extensions=['tables', "fenced_code"])
-    result = mark_safe(md.convert(value))
-    return result
+    result = markdown2.markdown(value, extras=['tables', 'strike'])
+    return mark_safe(result)

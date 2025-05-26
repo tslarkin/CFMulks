@@ -7,10 +7,12 @@
 <a style="order: 0" href="/">Home</a>
 {% endblock nav %}
 {% block content %}
-<h1>Page {{ page_obj.number }}</h1>
+
+<div style="box-sizing: border-box; padding-right: 20px; display:flex; flex-wrap: row nowrap; width:100%; justify-content: space-between">
+    <h1>The Notebooks of Charles Mulks</h1> 󠄚<div>[{{ page_obj.number }}]</div></div>
 
 {% for scan in  page_obj %}
-<h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>
+<div><h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>
 
 <div id="{{scan.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
 {% if user.is_authenticated %}
@@ -24,7 +26,7 @@
     {% if not user.is_authenticated %}readonly{% endif %}>
     <label for="transcription">Transcription</label>
     <textarea onchange="inputChanged(this)" id="transcription" name="transcription" rows="20"  style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.transcription}}</textarea>
-    <label for="description">Description</label>
+    <label for="description">Comment</label>
     <textarea onchange="inputChanged(this)" id="description" name="description" rows="6" style="width: 100%" {% if not user.is_authenticated %}readonly{% endif %}>{{scan.description}}</textarea>
     {% if user.is_authenticated %}<input onchange("scanSubmitted(this)") id="submitscan" type="submit" value="Submit">{% endif %}
 </form>
