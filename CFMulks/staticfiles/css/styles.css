@@ -91,6 +91,14 @@ figure {
    flex: 2 1 0px;
 }
 
+table {
+    width: 90%;
+}
+
+table th {
+    display: none;
+}
+
  img {
    width: 100%;
  }

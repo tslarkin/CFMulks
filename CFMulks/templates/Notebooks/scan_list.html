@@ -1,5 +1,7 @@
 {% extends "Notebooks/base.html" %}
 {% load static %}
+{% load notebook_extras %}
+
 {% block nav %}
 {{ block.super }}
 <a style="order: 0" href="/">Home</a>
@@ -28,18 +30,18 @@
 </form>
 {% else %}
 <!-- Made this a form instead of a div to imitate the authorized user branch -->
-<form style="display:flex; flex-direction:column; flex-flow: column nowrap flex:1 1 0">
+<form style="display:flex; flex-direction:column; flex-flow: column nowrap">
     {% if scan.seq_num %}
     <div style="margin-bottom: 3px; text-align: center">
         {{ scan.seq_num }}
     </div>
     {% endif %}
     {% if scan.transcription %}
-    <div style="white-space: pre-wrap">{{scan.transcription}}</div>
+    <div style="white-space: pre-wrap">{{scan.transcription |render_markdown }}</div>
     {% endif %}
     {% if scan.description %}
     <div style="font-style: italic; margin-top: 1em">
-        {{ scan.description }}
+        {{ scan.description | render_markdown}}
     </div>
     {% endif %}
 </form>
