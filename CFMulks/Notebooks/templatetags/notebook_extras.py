@@ -9,5 +9,5 @@ register = template.Library()
 @register.filter(name='render_markdown')
 @stringfilter
 def render_markdown(value):
-    result = markdown2.markdown(value, extras=['tables', 'strike'])
+    result = markdown2.markdown(value, extras={'break-on_backslash': True, 'tables': None, 'strike': None})
     return mark_safe(result)

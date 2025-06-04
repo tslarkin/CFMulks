@@ -29,6 +29,7 @@ nav {
 }
 nav a {
     text-decoration: none;
+    color: white;
 }
 
 .scan_not_submitted {
@@ -93,14 +94,39 @@ figure {
 
 table {
     width: 90%;
+    padding-block-start: 0;
+    padding-block-end: 1em;
 }
 
 table th {
     display: none;
 }
 
-p {
-    margin: 0;
+.jansen-ledger td:nth-of-type(2),  .jansen-ledger td:nth-of-type(3){
+    text-align: center;
+}
+
+.jansen-ledger-year {
+    text-align:center; 
+    font-weight:bold
+}
+
+.jansen-ledger th {
+    display: inline;
+}
+
+div.read-only {
+    display:flex; 
+    flex-flow:column nowrap;
+    font-family: inherit;
+    flex:  1 1 0;
+    justify-content: flex-start; 
+    white-space: pre-wrap; 
+    row-gap: 0;
+}
+
+.read-only p {
+    margin: 0 0 1em 0;
     line-height: 1.3em;
 }
 

@@ -31,22 +31,21 @@
     {% if user.is_authenticated %}<input onchange("scanSubmitted(this)") id="submitscan" type="submit" value="Submit">{% endif %}
 </form>
 {% else %}
-<!-- Made this a form instead of a div to imitate the authorized user branch -->
-<form style="display:flex; flex-direction:column; flex-flow: column nowrap">
+<div class="read-only">
     {% if scan.seq_num %}
     <div style="margin-bottom: 3px; text-align: center">
         {{ scan.seq_num }}
     </div>
     {% endif %}
     {% if scan.transcription %}
-    <div style="white-space: pre-wrap">{{scan.transcription |render_markdown }}</div>
+    {{scan.transcription |render_markdown }}
     {% endif %}
     {% if scan.description %}
-    <div style="font-style: italic; margin-top: 1em">
+    <div style="display: flex; justify-items: flex-start; flex-direction: column; flex-wrap: column nowrap; font-style: italic; margin-top: 1em"">
         {{ scan.description | render_markdown}}
     </div>
     {% endif %}
-</form>
+</div>
 {% endif %}
 <figure>
     <img src="{% static 'img' %}/{{scan.notebook.name}}/{{scan.file}}"/>
@@ -58,6 +57,7 @@
 {% block footer %}
 <!-- https://realpython.com/django-pagination/ -->
 <footer>
+    <div style="margin: 5px 0 15px 0">
     {% if page_obj.has_previous %}
         <a href="?page=1">
             ⏮️
@@ -84,7 +84,7 @@
             ⏭️
         </a>
     {% endif%}
-
+    </div>
     <div id="ellipsis" style="margin-top: 5px">
     {% for page_number in paginator_range %}
         {% if page_number == page_obj.paginator.ELLIPSIS %}
