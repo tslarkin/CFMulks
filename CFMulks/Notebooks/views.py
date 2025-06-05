@@ -8,6 +8,32 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from roman import toRoman
 
+def editfield(request):
+    scan_id = request.GET.get('scan')
+    scan = Scan.objects.get(pk=scan_id)
+    field = request.GET.get('field')
+    data = {'scan': scan, 'field': field}
+    return render(request, 'partials/editfield.html', data)
+
+def showfield(request):
+    scan_id = request.GET.get('scan')
+    scan = Scan.objects.get(pk=scan_id)
+    field = request.GET.get('field')
+    data = {'scan': scan, 'field': field}
+    return render(request, 'partials/showfield.html', data)
+
+def savefield(request):
+    scan_id = request.GET.get('scan')
+    scan = Scan.objects.get(pk=scan_id)
+    field = request.GET.get('field')
+    value = request.POST.get(field)
+    if value != None and getattr(scan, field) != value:
+        setattr(scan, field, value)
+        scan.save()
+    data = {'scan': scan, 'field': field}
+    return render(request, 'partials/showfield.html', data)
+
+
 def logout_view(request):
     logout(request)
     return redirect('/')

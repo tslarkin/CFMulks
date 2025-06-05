@@ -28,4 +28,7 @@ urlpatterns = [
     path("", views.home, name='home'),
     path('logout/', views.logout_view, name='logout'),
     path('login/', views.login_view, name='login'),
+    path('editfield/', views.editfield, name='editfield'),
+    path('showfield/', views.showfield, name='showfield'),
+    path('savefield/', views.savefield, name='savefield'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

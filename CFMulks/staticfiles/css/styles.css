@@ -102,6 +102,15 @@ table th {
     display: none;
 }
 
+.showfield {
+    white-space: pre-wrap; 
+    white-space-collapse: collapse
+}
+
+.editfield {
+
+}
+
 .jansen-ledger td:nth-of-type(2),  .jansen-ledger td:nth-of-type(3){
     text-align: center;
 }
@@ -116,13 +125,17 @@ table th {
 }
 
 div.read-only {
+    text-align: left;
     display:flex; 
+    flex: 1 1 0;
     flex-flow:column nowrap;
     font-family: inherit;
-    flex:  1 1 0;
     justify-content: flex-start; 
-    white-space: pre-wrap; 
     row-gap: 0;
+}
+
+textarea {
+    text-align: left;
 }
 
 .read-only p {

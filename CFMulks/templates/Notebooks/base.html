@@ -7,6 +7,7 @@
   </title>
   <link rel="stylesheet" type="text/css" href="{% static 'css' %}/styles.css">
   <script src="{% static 'js' %}/script.js"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
 </head>
     {% block header %}
     <header>
@@ -32,7 +33,7 @@
      </header>
     {% endblock header %}
 </header>
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 <div id="content">
   {% block content %}
   {% endblock content %}
