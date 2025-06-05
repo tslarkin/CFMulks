@@ -1,7 +1,7 @@
 {% load notebook_extras %}
 
 {% if field == 'seq_num'%}
-<div id="SS-{{scan.id}}" hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=seq_num" hx-target="this">
+<div hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=seq_num" hx-target="this">
     {% if scan.seq_num %}
         {{ scan.seq_num }}
     {% else %}
@@ -10,16 +10,8 @@
 </div>
 {% elif field == 'transcription'%}
 <div class="showfield" hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=transcription" hx-target="this"
->{% if scan.transcription %}{{ scan.transcription | render_markdown}}
-    {% else %}
-No transcription
-    {% endif %}
-</div>
+>{% if scan.transcription %}{{ scan.transcription | render_markdown}}{% endif %}</div>
 {% else %}
 <div class="showfield" hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=description" hx-target="this"
->{% if scan.description %}{{ scan.description | render_markdown}}
-{% else %}
-No Comment
-    {% endif %}
-</div>
+>{% if scan.description %}{{ scan.description | render_markdown}}{% endif %}</div>
 {% endif %}

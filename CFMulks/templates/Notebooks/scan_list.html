@@ -17,16 +17,16 @@
 <div id="{{scan.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
 
 <div class="read-only">
-    <div style="margin-bottom: 3px;">
-        <div style="font-weight: bold">Sequence</div>
+    <div>
+        <div  class="field-title">Sequence</div>
         {% include "partials/showfield.html" with field="seq_num" %}
     </div>
-    <div style="margin-bottom: 3px;">
-        <div style="font-weight: bold">Transcription</div>
+    <div>
+        <div  class="field-title">Transcription</div>
         {% include 'partials/showfield.html' with  field='transcription' %}
     </div>
-    <div style="margin-bottom: 3px;"  >
-        <div style="font-weight: bold">Comment</div>
+    <div  >
+        <div  class="field-title">Comment</div>
         {% include 'partials/showfield.html' with  field='description' %}
     </div>
  </div>

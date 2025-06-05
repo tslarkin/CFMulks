@@ -9,17 +9,17 @@
     {% endif %}
 ">
 {% elif field == 'transcription'%}
-<textarea name="transciption" hx-trigger="keyup[event.key === 'Escape']" 
+<textarea name="transcription" placeholder="Transcription" hx-trigger="keyup[event.key === 'Escape']" 
     hx-swap="outerHTML" 
     hx-post="/savefield/?scan={{scan.id}}&field=transcription" 
     rows="12" cols="50" 
     hx-target="this"
-class="editfield">{% if scan.transcription %}{{ scan.transcription}}{% else %}No transcription{% endif %}</textarea>
+class="editfield">{% if scan.transcription %}{{ scan.transcription}}{% endif %}</textarea>
 {% else %}
-<textarea name="description" hx-trigger="keyup[event.key === 'Escape']" 
+<textarea name="description" placeholder="Comment" hx-trigger="keyup[event.key === 'Escape']" 
     hx-swap="outerHTML" 
     hx-post="/savefield/?scan={{scan.id}}&field=description" 
     rows="12" cols="50" 
     hx-target="this"
-   class="editfield">{% if scan.description %}{{ scan.description}}{% else %}No Comment{% endif %}</textarea>
+   class="editfield">{% if scan.description %}{{ scan.description}}{% endif %}</textarea>
 {% endif %}

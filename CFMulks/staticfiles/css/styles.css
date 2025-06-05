@@ -103,8 +103,15 @@ table th {
 }
 
 .showfield {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
     white-space: pre-wrap; 
-    white-space-collapse: collapse
+    min-height: 1em;
+}
+
+.showfield:empty {
+    border: 1px solid black;
 }
 
 .editfield {
@@ -131,7 +138,12 @@ div.read-only {
     flex-flow:column nowrap;
     font-family: inherit;
     justify-content: flex-start; 
-    row-gap: 0;
+    row-gap: 15px;
+}
+
+.field-title {
+    font-weight: bold;
+    padding-bottom: 3px;
 }
 
 textarea {
