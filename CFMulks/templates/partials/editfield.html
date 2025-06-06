@@ -1,13 +1,8 @@
 {% load notebook_extras %}
 
 {% if field == 'seq_num'%}
-<input id="SS{{scan.id}}"  hx-swap="outerHTML" type="number" hx-get="/showfield/?scan={{scan.id}}&field=seq_num" hx-target="this" value= "
-    {% if scan.seq_num %}
-        {{ scan.seq_num }}
-    {% else %}
-        No Sequence
-    {% endif %}
-">
+<input class="sequence" name="seq_num"  hx-swap="outerHTML" type="number" hx-get="/showfield/?scan={{scan.id}}&field=seq_num" 
+    hx-target="this"  hx-trigger="keyup[event.key === 'Escape']" value= "{{ scan.seq_num }}">
 {% elif field == 'transcription'%}
 <textarea name="transcription" placeholder="Transcription" hx-trigger="keyup[event.key === 'Escape']" 
     hx-swap="outerHTML" 

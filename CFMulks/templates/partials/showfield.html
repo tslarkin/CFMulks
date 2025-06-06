@@ -1,13 +1,7 @@
 {% load notebook_extras %}
 
 {% if field == 'seq_num'%}
-<div hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=seq_num" hx-target="this">
-    {% if scan.seq_num %}
-        {{ scan.seq_num }}
-    {% else %}
-        No Sequence
-    {% endif %}
-</div>
+<div class="sequence" hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=seq_num" hx-target="this">{{ scan.seq_num }}</div>
 {% elif field == 'transcription'%}
 <div class="showfield" hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=transcription" hx-target="this"
 >{% if scan.transcription %}{{ scan.transcription | render_markdown}}{% endif %}</div>
