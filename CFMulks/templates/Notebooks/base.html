@@ -13,7 +13,7 @@
     <header>
     <nav>
     {% block nav %}
-    
+        {% if not request.path == '/home/' %}<a style="order: 0" href="/">Home</a>{% endif %}
         {% if user.is_authenticated %}
             <a style="order: 1" href='/admin'>Admin</a>
             <form id="logout-form" style="order: 2" method="post" action="{% url 'logout' %}">
@@ -26,7 +26,7 @@
             </form>
             <div style="order: 10; flex: 1 1 0; text-align: right; display: inline-block">{{user.first_name}} {{user.last_name}}</div>
         {% else %}
-            <a href="{% url 'login' %}">Login</a>
+            {% if not request.path == '/login/' %}<a href="{% url 'login' %}">Login</a>{% endif %}
         {% endif %}
         {% if not request.path == '/search/' %}<a style="order:5" href="{% url 'search' %}">Search</a>{% endif %}
     {% endblock nav%}

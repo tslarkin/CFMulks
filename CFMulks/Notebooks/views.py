@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from roman import toRoman
 from django.db.models import Q
 import re
+from django.utils.html import strip_tags
 
 def search(request):
     return render(request, "Notebooks/search.html")
@@ -29,7 +30,7 @@ def searchresults(request):
     records = Scan.objects.filter(bigQ)
     hints = []
     for record in records:
-        transcription = record.transcription.replace('\r', ' ').replace('\n', ' ')
+        transcription = strip_tags(record.transcription.replace('\r', ' ').replace('\n', ' '))
         end = len(transcription)
         for term in terms:
             matches = re.finditer("("+term+")", transcription, re.IGNORECASE)

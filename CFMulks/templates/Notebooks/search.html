@@ -1,8 +1,5 @@
 {% extends "Notebooks/base.html" %}
-{% block nav %}
-{{ block.super }}
-<a style="order: 0" href="/">Home</a>
-{% endblock nav %}
+
 {% block content%}
 <input name='search' type='text' placeholder='Search Notebooks' hx-get="searchresults/" hx-trigger="keyup[key=='Enter']" hx-target="#results" hx-swap="outerHTML">
 <table id="results" class="search-hints">
