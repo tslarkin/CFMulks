@@ -31,4 +31,6 @@ urlpatterns = [
     path('editfield/', views.editfield, name='editfield'),
     path('showfield/', views.showfield, name='showfield'),
     path('savefield/', views.savefield, name='savefield'),
+    path('search/', views.search, name='search'),
+    path('search/searchresults/', views.searchresults, name='searchresults')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

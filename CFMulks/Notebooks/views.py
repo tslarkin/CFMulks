@@ -7,6 +7,42 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from roman import toRoman
+from django.db.models import Q
+import re
+
+def search(request):
+    return render(request, "Notebooks/search.html")
+
+def searchresults(request):
+    search = request.GET.get("search", "")
+    if len(search) == 0:
+        return HttpResponse(status = 200)
+    characters = search.replace(" ", "")
+    if len(characters) < 4:
+        return HttpResponse(status = 200)
+    search = re.sub(r'\s+', ' ', search)
+    terms = search.split()
+    bigQ = Q()
+    for term in terms:
+        q = Q(transcription__regex=r'(?i).*'+term + r"[a-z]*\s?.*")
+        bigQ &= q
+    records = Scan.objects.filter(bigQ)
+    hints = []
+    for record in records:
+        transcription = record.transcription.replace('\r', ' ').replace('\n', ' ')
+        end = len(transcription)
+        for term in terms:
+            matches = re.finditer("("+term+")", transcription, re.IGNORECASE)
+            for match in matches:
+                spanstart, spanend = match.span()
+                text = transcription[spanstart:spanend]
+                a = max(spanstart - 80, 0)
+                b = min(spanend + 80, end)
+                prefix = " …" if a > 0 else " "
+                suffix = "…" if b < end else ""
+                hint = '<tr><td>**'+ record.notebook.roman_numeral() +record.name() +'**</td><td>'+prefix + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</td></tr>'
+                hints.append(hint)
+    return render(request, "partials/searchresults.html", {'hints': hints})
 
 def editfield(request):
     scan_id = request.GET.get('scan')

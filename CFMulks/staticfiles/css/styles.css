@@ -115,7 +115,13 @@ table th {
     border: 1px solid black;
 }
 
-
+.showfield h1 {
+    font-size: 1.0em;
+    font-weight: normal;
+    line-height: calc(1lh * 1.2);
+    text-align: center;
+    padding: 0;
+}
 
 .sequence {
     font-family: 'Open Sans', system-ui; 
@@ -126,6 +132,20 @@ table th {
     cursor: pointer;
 }
 
+.search-hints {
+    margin-block-start: 3px;
+    margin-block-end: 6px;
+    max-width: 800px;
+}
+
+.search-hints td {
+    vertical-align: top;
+    padding-bottom: 20px;
+}
+
+.search-hints td:first-child {
+    padding-right: 10px;
+}
 
 .jansen-ledger td:nth-of-type(2),  .jansen-ledger td:nth-of-type(3){
     text-align: center;

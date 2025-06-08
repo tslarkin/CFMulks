@@ -28,6 +28,7 @@
         {% else %}
             <a href="{% url 'login' %}">Login</a>
         {% endif %}
+        {% if not request.path == '/search/' %}<a style="order:5" href="{% url 'search' %}">Search</a>{% endif %}
     {% endblock nav%}
     </nav>
      </header>

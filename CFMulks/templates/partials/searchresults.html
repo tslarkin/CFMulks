@@ -1,0 +1,7 @@
+{% load notebook_extras %}
+
+<table id="results" class="search-hints">
+{% for hint in hints %}
+{{hint  | render_markdown}}
+{% endfor %}
+</table>
