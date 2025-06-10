@@ -32,10 +32,6 @@ nav a {
     color: white;
 }
 
-.scan_not_submitted {
-    background: red;
-}
-
 nav a:visited, nav #logout-form button:visited {
     color: white;
 }
@@ -111,8 +107,14 @@ table th {
     cursor: pointer;
 }
 
-.showfield:empty, .sequence:empty {
-    border: 1px solid black;
+.sequence:empty {
+    width: 100%;
+    text-align: center;
+}
+
+.showfield:empty::after, .sequence:empty::after {
+    content: "Blank";
+    text-align: center;
 }
 
 .showfield h1 {
@@ -189,16 +191,6 @@ table th {
     display: inline;
 }
 
-div.read-only {
-    text-align: left;
-    display:flex; 
-    flex: 1 1 0;
-    flex-flow:column nowrap;
-    font-family: inherit;
-    justify-content: flex-start; 
-    row-gap: 15px;
-}
-
 .field-title {
     font-weight: bold;
     padding-bottom: 3px;
@@ -214,10 +206,21 @@ textarea {
     line-height: 1.3em;
 }
 
+div.read-only {
+    text-align: left;
+    display:flex; 
+    flex: 1 1 0;
+    flex-flow:column nowrap;
+    font-family: inherit;
+    justify-content: flex-start; 
+    row-gap: 15px;
+}
+
  img {
    width: 100%;
  }
 
+ /*
 .scanform {
     flex: 1 1 0;
     margin-bottom: 50px; 
@@ -230,9 +233,12 @@ textarea {
     font-size: inherit;
     margin-bottom: 15px;
 }
+*/
+
 label {
     padding-bottom: 3px;
 }
+
 footer {
     border:1px solid black; 
     background-color: white; 

@@ -76,7 +76,8 @@ def savefield(request):
     scan = Scan.objects.get(pk=scan_id)
     field = request.GET.get('field')
     value = request.POST.get(field)
-    if value != None and getattr(scan, field) != value:
+    save = request.GET.get('save')
+    if save and value != None and getattr(scan, field) != value:
         setattr(scan, field, value)
         scan.save()
     data = {'scan': scan, 'field': field}
