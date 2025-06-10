@@ -32,6 +32,7 @@ def searchresults(request):
         bigQ &= q
     records = Scan.objects.filter(bigQ)
     hints = []
+    paginator = Paginator(records, 1)
     for record in records:
         transcription = strip_tags(record.transcription.replace('\r', ' ').replace('\n', ' '))
         end = len(transcription)
@@ -55,7 +56,7 @@ def searchresults(request):
                 '</a>'
                 hint = mark_safe(hint)
                 hints.append(hint)
-    return render(request, "partials/searchresults.html", {'hints': hints})
+    return render(request, "partials/searchresults.html", {'hints': hints, 'paginator': paginator})
 
 def editfield(request):
     scan_id = request.GET.get('scan')
@@ -77,7 +78,7 @@ def savefield(request):
     field = request.GET.get('field')
     value = request.POST.get(field)
     save = request.GET.get('save')
-    if save and value != None and getattr(scan, field) != value:
+    if save == "Yes" and value != None and getattr(scan, field) != value:
         setattr(scan, field, value)
         scan.save()
     data = {'scan': scan, 'field': field}

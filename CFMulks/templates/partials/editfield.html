@@ -13,13 +13,12 @@ class="editfield">{% if scan.transcription %}{{ scan.transcription}}{% endif %}<
    class="editfield">{% if scan.description %}{{ scan.description}}{% endif %}</textarea>
 {% endif %}
 <div id="end-editing" style="width: 100%; display:flex; flex-flow: row nowrap; justify-content: space-around"
- hx-swap="outerHTML" 
+    hx-swap="outerHTML" 
     hx-target="#editing"
-    hx-trigger="click" 
     hx-include="#editing"
     hx-on:htmx:before-request='this.ownerDocument.getElementById("end-editing").remove()'>
 <div style="cursor:pointer"  
-    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=False" >❌</div>
+    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=No" >❌</div>
 <div  style="cursor:pointer; font-size: 1.1em;" 
-    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=True"">✅</div>
+    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=Yes"">✅</div>
 </div>
