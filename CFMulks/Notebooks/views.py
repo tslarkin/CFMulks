@@ -10,6 +10,9 @@ from roman import toRoman
 from django.db.models import Q
 import re
 from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
+from django.urls import reverse
+
 
 def search(request):
     return render(request, "Notebooks/search.html")
@@ -19,7 +22,7 @@ def searchresults(request):
     if len(search) == 0:
         return HttpResponse(status = 200)
     characters = search.replace(" ", "")
-    if len(characters) < 4:
+    if len(characters) < 3:
         return HttpResponse(status = 200)
     search = re.sub(r'\s+', ' ', search)
     terms = search.split()
@@ -41,7 +44,16 @@ def searchresults(request):
                 b = min(spanend + 80, end)
                 prefix = " …" if a > 0 else " "
                 suffix = "…" if b < end else ""
-                hint = '<tr><td>**'+ record.notebook.roman_numeral() +record.name() +'**</td><td>'+prefix + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</td></tr>'
+                label = record.notebook.roman_numeral()+record.name()
+                url = reverse('showscan', args=[record.id])
+                hint = '<a style="color:black; text-decoration:none;" target="_blank" href="'\
+                    +url\
+                    +'">'\
+                    +'<div class="row">'\
+                    +'<div class="cell">'+label+"</div>"\
+                    +'<div class="cell">'+prefix + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</div>'\
+                '</a>'
+                hint = mark_safe(hint)
                 hints.append(hint)
     return render(request, "partials/searchresults.html", {'hints': hints})
 
@@ -93,6 +105,11 @@ def login_view(request):
 def home(request):
     books = Notebook.objects.all().order_by('name')
     return render(request, 'Notebooks/home.html', {'notebooks': books})
+
+def showscan(request, **kwargs):
+    scanid = kwargs['scanid']
+    scan = Scan.objects.get(pk=scanid)
+    return render(request, 'Notebooks/scan.html', {'scan':scan})
 
 class ScanListView(ListView):
     paginate_by = 5

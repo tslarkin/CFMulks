@@ -147,6 +147,35 @@ table th {
     padding-right: 10px;
 }
 
+.table {
+  display: table; /* Makes the div act like a table */
+}
+
+.header {
+  display: table-header-group; /* Makes the div act like a table header */
+  font-weight: bold;
+}
+
+.rowGroup {
+  display: table-row-group; /* Makes the div act like a table row group (tbody) */
+}
+
+.row {
+  display: table-row; /* Makes the div act like a table row */
+}
+
+.row div:first-child {
+    font-weight: bold;
+    padding-right: 20px;
+}
+
+.row div:last-child {
+    padding-bottom: 20px;
+}
+
+.cell {
+  display: table-cell; /* Makes the div act like a table cell */
+}
 .jansen-ledger td:nth-of-type(2),  .jansen-ledger td:nth-of-type(3){
     text-align: center;
 }

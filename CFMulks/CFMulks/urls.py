@@ -32,5 +32,6 @@ urlpatterns = [
     path('showfield/', views.showfield, name='showfield'),
     path('savefield/', views.savefield, name='savefield'),
     path('search/', views.search, name='search'),
-    path('search/searchresults/', views.searchresults, name='searchresults')
+    path('search/searchresults/', views.searchresults, name='searchresults'),
+    path('showscan/<int:scanid>/', views.showscan, name='showscan'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
