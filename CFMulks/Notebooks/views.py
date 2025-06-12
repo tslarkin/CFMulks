@@ -111,9 +111,9 @@ def savefield(request):
     field = request.GET.get('field')
     value = request.POST.get(field)
     save = request.GET.get('save')
-    if save == "Yes" and value != None and getattr(scan, field) != value:
+    if save == "Yes" and value != None and getattr(page, field) != value:
         setattr(page, field, value)
-        scan.save()
+        page.save()
     data = {'page': page, 'field': field}
     return render(request, 'partials/showfield.html', data)
 
