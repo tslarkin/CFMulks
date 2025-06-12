@@ -1,0 +1,26 @@
+{% extends "Notebooks/base.html" %}
+
+{% block content %}
+<div style="display:flex; flex:row nowrap; justify-content:center">
+{% if block_obj.has_previous %}
+    <a class="set-navigator" href="/show_page_set/P{{block_obj.previous_page_number}}/{{page_set_ids}}">
+        ☜
+    </a>
+{% else %}
+    <div></div>
+{% endif%}
+|
+{% if block_obj.has_next %}
+        <a class="set-navigator" href="/show_page_set/P{{block_obj.next_page_number}}/{{page_set_ids}}">
+            ☞
+    </a>
+{% else %}
+<div></div>
+{% endif%}
+</div>
+<div id="page-partial">
+{% for page in block_obj %}
+    {% include "partials/showpage.html" %}
+{% endfor %}
+</div>
+{% endblock %}

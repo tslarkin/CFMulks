@@ -24,7 +24,7 @@ from Notebooks import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('scan/<int:notebook_id>/', views.ScanListView.as_view(), name='scan'),
+    path('block/<int:notebook_id>/', views.BlockView.as_view(), name='block'),
     path("", views.home, name='home'),
     path('logout/', views.logout_view, name='logout'),
     path('login/', views.login_view, name='login'),
@@ -33,5 +33,7 @@ urlpatterns = [
     path('savefield/', views.savefield, name='savefield'),
     path('search/', views.search, name='search'),
     path('search/searchresults/', views.searchresults, name='searchresults'),
-    path('showscan/<int:scanid>/', views.showscan, name='showscan'),
+    path('show_page/<int:pageid>/', views.show_page, name='show_page'),
+    path('partial_page/', views.partial_page, name='partial_page'),
+    path('show_page_set/<str:focus_id>/<str:page_set_ids>/', views.show_page_set, name='show_page_set')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

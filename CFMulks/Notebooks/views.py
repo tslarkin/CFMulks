@@ -30,9 +30,9 @@ def searchresults(request):
     for term in terms:
         q = Q(transcription__regex=r'(?i).*'+term + r"[a-z]*\s?.*")
         bigQ &= q
-    records = Scan.objects.filter(bigQ)
+    records = Scan.objects.filter(bigQ).order_by('file')
     hints = []
-    paginator = Paginator(records, 1)
+    page_set = "-".join(str(record.id) for record in records)
     for record in records:
         transcription = strip_tags(record.transcription.replace('\r', ' ').replace('\n', ' '))
         end = len(transcription)
@@ -46,8 +46,9 @@ def searchresults(request):
                 prefix = " …" if a > 0 else " "
                 suffix = "…" if b < end else ""
                 label = record.notebook.roman_numeral()+record.name()
-                url = reverse('showscan', args=[record.id])
-                hint = '<a style="color:black; text-decoration:none;" target="_blank" href="'\
+                url = f"/show_page_set/{record.id}/{page_set}/"
+                hint = '<a style="color:black; text-decoration:none;" '\
+                    + 'href="'\
                     +url\
                     +'">'\
                     +'<div class="row">'\
@@ -56,32 +57,64 @@ def searchresults(request):
                 '</a>'
                 hint = mark_safe(hint)
                 hints.append(hint)
-    return render(request, "partials/searchresults.html", {'hints': hints, 'paginator': paginator})
+    return render(request, "partials/searchresults.html", {'hints': hints})
+    
+def show_page(request, **kwargs):
+    pageid = kwargs['pageid']
+    # Leaving the old model name unchanged
+    page = Scan.objects.get(pk=pageid)
+    pages = request.GET.get('pages')
+    if pages == None:
+        return render(request, 'Notebooks/page.html', {'page':page})            
+    else:
+        numbers = [int(x) for x in pages.split('-')]
+        pages = [Scan.objects.get(pk=n) for n in numbers].order_by('file')
+        paginator = Paginator(pages,1)
+        block_obj = paginator.get_page(page)
+        return render(request, 'Notebooks/page.html', {'page':page, 'block_obj': block_obj})
+
+def show_page_set(request, focus_id, page_set_ids):
+    is_page_number = focus_id[0] == 'P'
+    if is_page_number:
+        focus_id = focus_id[1:]
+    focus_id = int(focus_id)
+    numbers = [int(x) for x in page_set_ids.split('-')]
+    pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
+    paginator = Paginator(pageset,1)
+    index = focus_id if is_page_number else numbers.index(focus_id)+1
+    block_obj = paginator.get_page(index)
+    response = render(request, 'Notebooks/page.html', {'block_obj': block_obj, 'page_set_ids': page_set_ids})
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
+
+def partial_page(request, **kwargs):
+    block = request.GET.get('block')
+    return render(request, 'partials/showpage.html', {'block': block})
 
 def editfield(request):
-    scan_id = request.GET.get('scan')
-    scan = Scan.objects.get(pk=scan_id)
+    page_id = request.GET.get('page')
+    page = Scan.objects.get(pk=page_id)
     field = request.GET.get('field')
-    data = {'scan': scan, 'field': field}
+    data = {'page': page, 'field': field}
     return render(request, 'partials/editfield.html', data)
 
 def showfield(request):
-    scan_id = request.GET.get('scan')
-    scan = Scan.objects.get(pk=scan_id)
+    page_id = request.GET.get('page')
+    page = Scan.objects.get(pk=page_id)
     field = request.GET.get('field')
-    data = {'scan': scan, 'field': field}
+    data = {'page': page, 'field': field}
     return render(request, 'partials/showfield.html', data)
 
 def savefield(request):
-    scan_id = request.GET.get('scan')
-    scan = Scan.objects.get(pk=scan_id)
+    page_id = request.GET.get('page')
+    page = Scan.objects.get(pk=page_id)
     field = request.GET.get('field')
     value = request.POST.get(field)
     save = request.GET.get('save')
     if save == "Yes" and value != None and getattr(scan, field) != value:
-        setattr(scan, field, value)
+        setattr(page, field, value)
         scan.save()
-    data = {'scan': scan, 'field': field}
+    data = {'page': page, 'field': field}
     return render(request, 'partials/showfield.html', data)
 
 
@@ -108,24 +141,29 @@ def home(request):
     books = Notebook.objects.all().order_by('name')
     return render(request, 'Notebooks/home.html', {'notebooks': books})
 
-def showscan(request, **kwargs):
+def show___scan(request, **kwargs):
     scanid = kwargs['scanid']
     scan = Scan.objects.get(pk=scanid)
-    return render(request, 'Notebooks/scan.html', {'scan':scan})
+    pages = request.GET.get('pages').split(",")
+    numbers = [int(x) for x in pages]
+    paginator = Paginator(numbers,1)
+    page_obj = paginator.get_page(scanid)
+    return render(request, 'Notebooks/scan.html', {'scan':scan, 'page_obj': page_obj})
 
-class ScanListView(ListView):
+class BlockView(ListView):
     paginate_by = 5
     model = Scan
     ordering = ["file"]
+    template_name = "Notebooks/block.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         pages = self.get_queryset()
         paginator = Paginator(pages, self.paginate_by)
-        page_no = self.request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_no)
-        context['page_obj'] = page_obj
-        context['paginator_range'] = paginator.get_elided_page_range(number=page_no, on_each_side=1, on_ends=2)
+        block_no = self.request.GET.get('block', 1)
+        block_obj = paginator.get_page(block_no)
+        context['block_obj'] = block_obj
+        context['block_range'] = paginator.get_elided_page_range(number=block_no, on_each_side=1, on_ends=2)
         return context
     
     def get_queryset(self):
@@ -151,8 +189,8 @@ class ScanListView(ListView):
                 scan.description = description
                 scan.save()
                 return HttpResponseRedirect("#"+anchor)
-            page_number = request.POST.get("page_num", 1)
+            block_number = request.POST.get("block_num", 1)
             notebook_id = self.kwargs['notebook_id']
-            target = "/scan/"+str(notebook_id)+"/?page="+str(page_number)
+            target = "/block/"+str(notebook_id)+"/?block="+str(block_number)
             return redirect(target)
         return HttpResponse()

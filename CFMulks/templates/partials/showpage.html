@@ -1,9 +1,8 @@
 {% load static %}
+<div id="page-n">
+    <h2>{{page.notebook.roman_numeral}}.{{page.name}}</h2>
 
-<div>
-    <h2>{{scan.notebook.roman_numeral}}.{{scan.name}}</h2>
-
-    <div id="{{scan.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
+    <div id="{{page.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
 
         <div class="read-only">
             <div>
@@ -20,7 +19,7 @@
             </div>
         </div>
         <figure>
-            <img src="{% static 'img' %}/{{scan.notebook.name}}/{{scan.file}}"/>
+            <img src="{% static 'img' %}/{{page.notebook.name}}/{{page.file}}"/>
         </figure>
     </div>
 </div>

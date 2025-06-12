@@ -36,6 +36,12 @@ nav a:visited, nav #logout-form button:visited {
     color: white;
 }
 
+a.set-navigator {
+    text-decoration: none;
+    color:black;
+    font-size: 48px;
+}
+
 button {
     font-size: inherit;
 }

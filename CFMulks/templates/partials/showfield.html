@@ -2,12 +2,12 @@
 
 {% if field == 'seq_num'%}
 <div class="sequence" 
-    {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=seq_num" hx-target="this" {% endif %}
->{{ scan.seq_num }}</div>
+    {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=seq_num" hx-target="this" {% endif %}
+>{{ page.seq_num }}</div>
 {% elif field == 'transcription'%}
-<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=transcription" hx-target="this"  {% endif %}
->{% if scan.transcription %}{{ scan.transcription | render_markdown}}{% endif %}</div>
+<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=transcription" hx-target="this"  {% endif %}
+>{% if page.transcription %}{{ page.transcription | render_markdown}}{% endif %}</div>
 {% else %}
-<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?scan={{scan.id}}&field=description" hx-target="this" {% endif %}
->{% if scan.description %}{{ scan.description | render_markdown}}{% endif %}</div>
+<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=description" hx-target="this" {% endif %}
+>{% if page.description %}{{ page.description | render_markdown}}{% endif %}</div>
 {% endif %}

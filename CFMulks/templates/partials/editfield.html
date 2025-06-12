@@ -1,16 +1,16 @@
 {% load notebook_extras %}
 
 {% if field == 'seq_num'%}
-<input id="editing" class="sequence" name="seq_num"  hx-swap="outerHTML" type="number" hx-get="/showfield/?scan={{scan.id}}&field=seq_num" 
-    hx-target="this"  hx-trigger="keyup[event.key === 'Escape']" value= "{{ scan.seq_num }}">
+<input id="editing" class="sequence" name="seq_num" type="number"  
+     value= "{{ page.seq_num }}">
 {% elif field == 'transcription'%}
 <textarea id="editing" style="width:100%" name="transcription" placeholder="Transcription" 
     rows="12"  
-class="editfield">{% if scan.transcription %}{{ scan.transcription}}{% endif %}</textarea>
+class="editfield">{% if page.transcription %}{{ page.transcription}}{% endif %}</textarea>
 {% else %}
 <textarea id="editing" style="width:100%" name="description" placeholder="Comment" 
     rows="12"  
-   class="editfield">{% if scan.description %}{{ scan.description}}{% endif %}</textarea>
+   class="editfield">{% if page.description %}{{ page.description}}{% endif %}</textarea>
 {% endif %}
 <div id="end-editing" style="width: 100%; display:flex; flex-flow: row nowrap; justify-content: space-around"
     hx-swap="outerHTML" 
@@ -18,7 +18,7 @@ class="editfield">{% if scan.transcription %}{{ scan.transcription}}{% endif %}<
     hx-include="#editing"
     hx-on:htmx:before-request='this.ownerDocument.getElementById("end-editing").remove()'>
 <div style="cursor:pointer"  
-    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=No" >❌</div>
+    hx-post="/savefield/?page={{page.id}}&field={{field}}&save=No" >❌</div>
 <div  style="cursor:pointer; font-size: 1.1em;" 
-    hx-post="/savefield/?scan={{scan.id}}&field={{field}}&save=Yes"">✅</div>
+    hx-post="/savefield/?page={{page.id}}&field={{field}}&save=Yes"">✅</div>
 </div>
