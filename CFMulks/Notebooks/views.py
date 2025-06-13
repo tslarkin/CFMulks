@@ -34,10 +34,18 @@ def searchresults(request):
     hints = []
     page_set = "-".join(str(record.id) for record in records)
     for record in records:
-        transcription = strip_tags(record.transcription.replace('\r', ' ').replace('\n', ' '))
+        transcription = record.transcription.replace('\r', ' ').replace('\n', ' ')
+        pattern = r"(</?.+?>)"
+        transcription = re.sub(pattern, " ", transcription)
+        transcription = re.sub(r"\s\s+", " ", transcription)
+        pattern = r"(:?---+:?\|?)"
+        any = re.findall(pattern, transcription)
+        if len(any) > 0:
+            transcription = re.sub(pattern, "", transcription)
         end = len(transcription)
         for term in terms:
-            matches = re.finditer("("+term+")", transcription, re.IGNORECASE)
+            pattern = "("+term+")"
+            matches = re.finditer(pattern, transcription, re.IGNORECASE)
             for match in matches:
                 spanstart, spanend = match.span()
                 text = transcription[spanstart:spanend]
@@ -57,6 +65,8 @@ def searchresults(request):
                 '</a>'
                 hint = mark_safe(hint)
                 hints.append(hint)
+    if len(hints) == 0:
+        hints.append('<div style="text-align: center">No Matches Found</div>')
     return render(request, "partials/searchresults.html", {'hints': hints})
     
 def show_page(request, **kwargs):
