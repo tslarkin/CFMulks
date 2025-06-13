@@ -2,7 +2,7 @@
 
 {% if field == 'seq_num'%}
 <div class="sequence" 
-    {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=seq_num" hx-target="this" {% endif %}
+    {% if False %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=seq_num" hx-target="this" {% endif %}
 >{{ page.seq_num }}</div>
 {% elif field == 'transcription'%}
 <div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=transcription" hx-target="this"  {% endif %}

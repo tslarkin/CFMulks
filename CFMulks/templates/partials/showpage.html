@@ -1,12 +1,12 @@
 {% load static %}
 <div id="page-n">
-    <h2>{{page.notebook.roman_numeral}}.{{page.name}}</h2>
+    <h2>{{page.notebook.roman_numeral}}{{page.name}}</h2>
 
     <div id="{{page.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
 
         <div class="read-only">
             <div>
-                <div  class="field-title">Sequence</div>
+                <div  class="field-title">Index</div>
                 {% include "partials/showfield.html" with field="seq_num" %}
             </div>
             <div>
