@@ -26,6 +26,7 @@
             </form>
             <div style="order: 10; flex: 1 1 0; text-align: right; display: inline-block">{{user.first_name}} {{user.last_name}}</div>
         {% else %}
+            <div style="order: 10; flex: 1 1 0; text-align: right; display: inline-block">Guest</div>
             {% if not request.path == '/login/' %}<a href="{% url 'login' %}">Login</a>{% endif %}
         {% endif %}
         {% if not request.path == '/search/' %}<a style="order:5" href="{% url 'search' %}">Search</a>{% endif %}

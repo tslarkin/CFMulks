@@ -34,14 +34,20 @@ def searchresults(request):
     hints = []
     page_set = "-".join(str(record.id) for record in records)
     for record in records:
-        transcription = record.transcription.replace('\r', ' ').replace('\n', ' ')
+        transcription = record.transcription
+        # delete Markdown headers
+        pattern = r"^(\s*[a-zA-Z0-9]\s*\|)+(\s*[a-zA-Z0-9]\s*)$"
+        transcription = re.sub(pattern, "", transcription, flags=re.MULTILINE)
+        # remove carriage returns and new lines.
+        transcription = transcription.replace('\r', ' ').replace('\n', ' ')
+        # replace HTML tags with spaces
         pattern = r"(</?.+?>)"
         transcription = re.sub(pattern, " ", transcription)
+        # replace runs of spaces with a single space
         transcription = re.sub(r"\s\s+", " ", transcription)
+        # delete Markdown column specifiers
         pattern = r"(:?---+:?\|?)"
-        any = re.findall(pattern, transcription)
-        if len(any) > 0:
-            transcription = re.sub(pattern, "", transcription)
+        transcription = re.sub(pattern, "", transcription)
         end = len(transcription)
         for term in terms:
             pattern = "("+term+")"
@@ -94,7 +100,7 @@ def show_page_set(request, focus_id, page_set_ids):
     index = focus_id if is_page_number else numbers.index(focus_id)+1
     block_obj = paginator.get_page(index)
     response = render(request, 'Notebooks/page.html', {'block_obj': block_obj, 'page_set_ids': page_set_ids})
-    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    #response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return response
 
 def partial_page(request, **kwargs):
