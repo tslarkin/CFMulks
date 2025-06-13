@@ -42,8 +42,14 @@ a.set-navigator {
     font-size: 48px;
 }
 
-button {
+button, input {
     font-size: inherit;
+    font-family: inherit;
+}
+
+input.search-input {
+    font-size: inherit;
+    font-family: inherit;
 }
 
 h1 {
@@ -71,14 +77,6 @@ footer a {
     padding: 5px;
     margin: 3px;
 }
-.scanform input {
-    padding: 3px 3px;
-    margin-top: 3px;
-    margin-bottom: 8px;
-    width: 100%;
-    box-sizing: border-box;  
- }
-
 form {
     display:flex; 
     flex-flow:column nowrap;
@@ -239,6 +237,16 @@ div.read-only {
     font-size: inherit;
     margin-bottom: 15px;
 }
+
+.scanform input {
+    padding: 3px 3px;
+    margin-top: 3px;
+    margin-bottom: 8px;
+    width: 100%;
+    box-sizing: border-box;  
+ }
+
+
 */
 
 label {

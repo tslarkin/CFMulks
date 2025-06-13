@@ -1,6 +1,6 @@
 {% extends "Notebooks/base.html" %}
 
 {% block content%}
-<input style="margin-bottom:30px" name='search' type='text' placeholder='Search Notebooks' hx-get="searchresults/" hx-trigger="keyup[key=='Enter']" hx-target="#results" hx-swap="outerHTML">
+<input class="search-input" style="margin-bottom:30px" name='search' type='text' placeholder='Search Notebooks' hx-get="searchresults/" hx-trigger="keyup[key=='Enter']" hx-target="#results" hx-swap="outerHTML">
 <table id="results" class="search-hints"></table>
 {% endblock %}
