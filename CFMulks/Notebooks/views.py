@@ -12,7 +12,7 @@ import re
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.urls import reverse
-
+import markdown2
 
 def search(request):
     return render(request, "Notebooks/search.html")
@@ -34,50 +34,86 @@ def searchresults(request):
     page_set = "-".join(str(record.id) for record in records)
     hints = []
     for record in records:
-        hints += (get_hints('transcription', terms, page_set, record) + get_hints('description', terms, page_set, record))
+        transcription_hints = get_hints('transcription', terms, page_set, record)
+        hints+= transcription_hints
+        description_hints = get_notes('description', terms, page_set,  record)
+        
+        hints += description_hints
+        hints += ['<div class="row" style="height: 30px"></div>']
     if len(hints) == 0:
-        hints.append('<div style="text-align: center">No Matches Found</div>')
+        hints.append('<div class="row" style="text-align: center">No Matches Found</div>')
     return render(request, "partials/searchresults.html", {'hints': hints})
 
-def get_hints(field, terms, page_set, record):
-    transcription = getattr(record, field)
+def get_hints(field_name, terms, page_set, record):
+    field = getattr(record, field_name)
+    if len(field) == 0:
+        return []
     # delete Markdown headers
     pattern = r"^(\s*[a-zA-Z0-9]\s*\|)+(\s*[a-zA-Z0-9]\s*)$"
-    transcription = re.sub(pattern, "", transcription, flags=re.MULTILINE)
+    field = re.sub(pattern, "", field, flags=re.MULTILINE)
     # remove carriage returns and new lines.
-    transcription = transcription.replace('\r', ' ').replace('\n', ' ')
+    field = field.replace('\r', ' ').replace('\n', ' ')
     # replace HTML tags with spaces
     pattern = r"(</?.+?>)"
-    transcription = re.sub(pattern, " ", transcription)
+    field = re.sub(pattern, " ", field)
     # replace runs of spaces with a single space
-    transcription = re.sub(r"\s\s+", " ", transcription)
+    field = re.sub(r"\s\s+", " ", field)
     # delete Markdown column specifiers
     pattern = r"(:?---+:?\|?)"
-    transcription = re.sub(pattern, "", transcription)
-    end = len(transcription)
+    field = re.sub(pattern, "", field)
+    end = len(field)
     hints = []
+    label_p = True
     for term in terms:
         pattern = "("+term+")"
-        matches = re.finditer(pattern, transcription, re.IGNORECASE)
+        matches = re.finditer(pattern, field, re.IGNORECASE)
         for match in matches:
             spanstart, spanend = match.span()
-            text = transcription[spanstart:spanend]
+            text = field[spanstart:spanend]
             a = max(spanstart - 80, 0)
             b = min(spanend + 80, end)
             prefix = " …" if a > 0 else " "
             suffix = "…" if b < end else ""
-            label = record.notebook.roman_numeral()+record.name()
+            label = ''
+            if label_p:
+                label = record.notebook.roman_numeral()+record.name() if field_name == "transcription" else "Notes"
+                label_p = False
             url = f"/show_page_set/{record.id}/{page_set}/"
-            hint = f'<a style="color:black; text-decoration:none;" href="{url}">'\
-                +'<div class="row">'\
-                +f'<div class="cell">{label}</div>'\
-                +f'<div class="cell {field}">{prefix}' + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</div>'\
+            hint = f'<a class="row" style="color:black; text-decoration:none;" href="{url}">'\
+                +f'<div class="cell label {field_name}">{label}</div>'\
+                +f'<div class="cell {field_name}">{prefix}' + field[a:spanstart] + '<u>'+text+'</u>' + field[spanend:b] + suffix+'</div>'\
                 +'</a>'
             hint = mark_safe(hint)
             hints.append(hint)
     return hints
 
-    
+def get_notes(field_name, terms, page_set, record):
+    field = getattr(record, field_name)
+    if len(field) == 0:
+        return []
+    # delete Markdown headers
+    pattern = r"^(\s*[a-zA-Z0-9]\s*\|)+(\s*[a-zA-Z0-9]\s*)$"
+    field = re.sub(pattern, "", field, flags=re.MULTILINE)
+    # remove carriage returns and new lines.
+    field = field.replace('\r', ' ').replace('\n', ' ')
+    # replace HTML tags with spaces
+    pattern = r"(</?.+?>)"
+    field = re.sub(pattern, " ", field)
+    # replace runs of spaces with a single space
+    field = re.sub(r"\s\s+", " ", field)
+    # delete Markdown column specifiers
+    pattern = r"(:?---+:?\|?)"
+    field = re.sub(pattern, "", field)
+    field = markdown2.markdown(field, extras={'break-on_backslash': True, 'tables': None, 'strike': None})
+    field = re.sub(r"</?p>", "", field)
+    url = f"/show_page_set/{record.id}/{page_set}/"
+    hint = f'<div class="row" style="color:black; text-decoration:none;">'\
+        +f'<div class="cell label {field_name}">Notes</div>'\
+        +f'<div class="cell {field_name}"> {field} </div>'\
+        +'</div>'
+    hint = mark_safe(hint)
+    return [hint]
+   
 def show_page(request, **kwargs):
     pageid = kwargs['pageid']
     # Leaving the old model name unchanged

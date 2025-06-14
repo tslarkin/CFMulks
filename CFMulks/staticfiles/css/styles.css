@@ -152,15 +152,16 @@ table th {
     max-width: 800px;
 }
 
+/*
 .search-hints td {
     vertical-align: top;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .search-hints td:first-child {
     padding-right: 10px;
 }
-
+*/
 .table {
   display: table; /* Makes the div act like a table */
 }
@@ -178,18 +179,32 @@ table th {
   display: table-row; /* Makes the div act like a table row */
 }
 
+/*
 .row div:first-child {
     font-weight: bold;
     padding-right: 20px;
 }
-
-.row div:last-child {
-    padding-bottom: 20px;
-}
+*/
 
 .cell {
   display: table-cell; /* Makes the div act like a table cell */
+  padding-bottom: 5px;
 }
+
+.cell.label {
+    font-weight: bold;
+    padding-right: 20px;
+}
+
+.cell.label.description {
+    font-weight: 400;
+    font-style: normal;
+}
+
+.cell.description {
+    font-weight: 400;
+}
+
 .jansen-ledger td:nth-of-type(2),  .jansen-ledger td:nth-of-type(3){
     text-align: center;
 }
