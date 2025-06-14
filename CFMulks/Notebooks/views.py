@@ -31,49 +31,52 @@ def searchresults(request):
         q = Q(transcription__regex=r'(?i).*'+term + r"[a-z]*\s?.*")
         bigQ &= q
     records = Scan.objects.filter(bigQ).order_by('file')
-    hints = []
     page_set = "-".join(str(record.id) for record in records)
+    hints = []
     for record in records:
-        transcription = record.transcription
-        # delete Markdown headers
-        pattern = r"^(\s*[a-zA-Z0-9]\s*\|)+(\s*[a-zA-Z0-9]\s*)$"
-        transcription = re.sub(pattern, "", transcription, flags=re.MULTILINE)
-        # remove carriage returns and new lines.
-        transcription = transcription.replace('\r', ' ').replace('\n', ' ')
-        # replace HTML tags with spaces
-        pattern = r"(</?.+?>)"
-        transcription = re.sub(pattern, " ", transcription)
-        # replace runs of spaces with a single space
-        transcription = re.sub(r"\s\s+", " ", transcription)
-        # delete Markdown column specifiers
-        pattern = r"(:?---+:?\|?)"
-        transcription = re.sub(pattern, "", transcription)
-        end = len(transcription)
-        for term in terms:
-            pattern = "("+term+")"
-            matches = re.finditer(pattern, transcription, re.IGNORECASE)
-            for match in matches:
-                spanstart, spanend = match.span()
-                text = transcription[spanstart:spanend]
-                a = max(spanstart - 80, 0)
-                b = min(spanend + 80, end)
-                prefix = " …" if a > 0 else " "
-                suffix = "…" if b < end else ""
-                label = record.notebook.roman_numeral()+record.name()
-                url = f"/show_page_set/{record.id}/{page_set}/"
-                hint = '<a style="color:black; text-decoration:none;" '\
-                    + 'href="'\
-                    +url\
-                    +'">'\
-                    +'<div class="row">'\
-                    +'<div class="cell">'+label+"</div>"\
-                    +'<div class="cell">'+prefix + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</div>'\
-                '</a>'
-                hint = mark_safe(hint)
-                hints.append(hint)
+        hints += (get_hints('transcription', terms, page_set, record) + get_hints('description', terms, page_set, record))
     if len(hints) == 0:
         hints.append('<div style="text-align: center">No Matches Found</div>')
     return render(request, "partials/searchresults.html", {'hints': hints})
+
+def get_hints(field, terms, page_set, record):
+    transcription = getattr(record, field)
+    # delete Markdown headers
+    pattern = r"^(\s*[a-zA-Z0-9]\s*\|)+(\s*[a-zA-Z0-9]\s*)$"
+    transcription = re.sub(pattern, "", transcription, flags=re.MULTILINE)
+    # remove carriage returns and new lines.
+    transcription = transcription.replace('\r', ' ').replace('\n', ' ')
+    # replace HTML tags with spaces
+    pattern = r"(</?.+?>)"
+    transcription = re.sub(pattern, " ", transcription)
+    # replace runs of spaces with a single space
+    transcription = re.sub(r"\s\s+", " ", transcription)
+    # delete Markdown column specifiers
+    pattern = r"(:?---+:?\|?)"
+    transcription = re.sub(pattern, "", transcription)
+    end = len(transcription)
+    hints = []
+    for term in terms:
+        pattern = "("+term+")"
+        matches = re.finditer(pattern, transcription, re.IGNORECASE)
+        for match in matches:
+            spanstart, spanend = match.span()
+            text = transcription[spanstart:spanend]
+            a = max(spanstart - 80, 0)
+            b = min(spanend + 80, end)
+            prefix = " …" if a > 0 else " "
+            suffix = "…" if b < end else ""
+            label = record.notebook.roman_numeral()+record.name()
+            url = f"/show_page_set/{record.id}/{page_set}/"
+            hint = f'<a style="color:black; text-decoration:none;" href="{url}">'\
+                +'<div class="row">'\
+                +f'<div class="cell">{label}</div>'\
+                +f'<div class="cell {field}">{prefix}' + transcription[a:spanstart] + '<u>'+text+'</u>' + transcription[spanend:b] + suffix+'</div>'\
+                +'</a>'
+            hint = mark_safe(hint)
+            hints.append(hint)
+    return hints
+
     
 def show_page(request, **kwargs):
     pageid = kwargs['pageid']

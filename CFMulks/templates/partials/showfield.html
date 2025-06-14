@@ -8,6 +8,6 @@
 <div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=transcription" hx-target="this"  {% endif %}
 >{% if page.transcription %}{{ page.transcription | render_markdown}}{% endif %}</div>
 {% else %}
-<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=description" hx-target="this" {% endif %}
+<div class="showfield description" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=description" hx-target="this" {% endif %}
 >{% if page.description %}{{ page.description | render_markdown}}{% endif %}</div>
 {% endif %}

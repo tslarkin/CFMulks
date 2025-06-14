@@ -102,6 +102,10 @@ table th {
     display: none;
 }
 
+.description {
+    font-style:italic;
+}
+
 .showfield {
     display: flex;
     flex-direction: column;
@@ -109,6 +113,10 @@ table th {
     white-space: pre-wrap; 
     min-height: 1.2em;
     cursor: pointer;
+}
+
+.showfield.description {
+    font-style:italic
 }
 
 .sequence:empty {
