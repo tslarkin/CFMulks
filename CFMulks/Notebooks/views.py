@@ -36,9 +36,9 @@ def searchresults(request):
     for record in records:
         transcription_hints = get_hints('transcription', terms, page_set, record)
         hints+= transcription_hints
-        description_hints = get_notes('description', terms, page_set,  record)
+#        description_hints = get_notes('description', terms, page_set,  record)
         
-        hints += description_hints
+#        hints += description_hints
         hints += ['<div class="row" style="height: 30px"></div>']
     if len(hints) == 0:
         hints.append('<div class="row" style="text-align: center">No Matches Found</div>')
