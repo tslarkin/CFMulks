@@ -179,6 +179,10 @@ table th {
   display: table-row; /* Makes the div act like a table row */
 }
 
+.vab td {
+    vertical-align: bottom;
+}
+
 /*
 .row div:first-child {
     font-weight: bold;

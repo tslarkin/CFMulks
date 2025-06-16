@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = 'Indexes the Scan model by file name'
 
     def handle(self, *args, **kwargs):
-        hits = Scan.objects.filter(notebook__name="3").order_by('file')
+        hits = Scan.objects.all().order_by('file')
         index = 0
         for page in hits:
             page.seq_num = index
