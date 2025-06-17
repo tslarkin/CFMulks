@@ -11,3 +11,9 @@ register = template.Library()
 def render_markdown(value):
     result = markdown2.markdown(value, extras={'break-on_backslash': True, 'tables': None, 'strike': None})
     return mark_safe(result)
+
+@register.filter(name='render_texdown')
+@stringfilter
+def render_texdown(value):
+    result = markdown2.markdown(value, extras={'break-on_backslash': True, 'latex': None, 'tables': None, 'strike': None})
+    return mark_safe(result)
