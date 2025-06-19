@@ -11,6 +11,7 @@
 </head>
     {% block header %}
     <header>
+    <h1 style="margin-top: 50px; font-size: 1.6rem; text-align:center; width:100%;">The Notebooks of Charles F. Mulks</h1>
     <nav>
     {% block nav %}
         {% if not request.path == '/home/' %}<a style="order: 0" href="/">Home</a>{% endif %}
@@ -18,9 +19,7 @@
             <a style="order: 1" href='/admin'>Admin</a>
             <form id="logout-form" style="order: 2" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit"
-                    style="color: white; background: none; border: none; cursor: pointer;
-                        text-decoration: none; font-family: inherit">
+                <button id="logout-button" type="submit">
                     Logout
                 </button>
             </form>

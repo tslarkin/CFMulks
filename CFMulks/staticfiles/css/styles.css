@@ -1,10 +1,32 @@
 /* External style sheet static */
 
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('/static/fonts/CormorantGaramond-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('/static/fonts/CormorantGaramond-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Cormorant Garamond';
+    src: url('/static/fonts/CormorantGaramond-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
 body {
     margin-bottom: 120px; 
     display:block; 
-    font-family: 'Open Sans', system-ui; 
-    font-size: 18px; 
+    font-family: 'Cormorant Garamond', serif; 
+    font-size: 22px; 
     padding: 0 0px;
     max-width: 100vmax;
     line-height: 1.2em;
@@ -15,7 +37,8 @@ body {
 
 nav {
     font-family: inherit;
-    font-size: 1.1rem;
+    font-size: 1.0rem;
+    font-variant: small-caps;
     min-height: 40px;
     width:auto;
     display: flex;
@@ -23,21 +46,41 @@ nav {
     justify-content:flex-start; 
     align-items:baseline; 
     column-gap: 20px;
-    color: white;
-    background-color: black;
-    padding: 12px 20px 0px 20px;
+    color: black;
+    background-color: transparent;
+    padding: 5px 20px 0px 20px;
 }
 nav a {
     text-decoration: none;
-    color: white;
+    color: black;
+}
+
+nav a:hover {
+    text-decoration: underline;
 }
 
 nav a:visited, nav #logout-form button:visited {
-    color: white;
+    color: black;
+}
+
+#logout-button {
+    color: black; 
+    background: none; 
+    border: none; 
+    cursor: pointer;
+    text-decoration: none; 
+    font-variant:small-caps;
+    width: 100px;
+}
+
+#logout-button:hover {
+    text-decoration: underline;
 }
 
 a.set-navigator {
     text-decoration: none;
+    position:relative;
+    bottom: -3px;
     color:black;
     font-size: 48px;
 }
@@ -54,7 +97,8 @@ input.search-input {
 
 h1 {
     text-align: left;
-    padding-bottom: 20px;
+    padding-bottom: 5px;
+    margin-block-end: 30px;
 }
 footer a {
     text-decoration: none;
@@ -152,16 +196,6 @@ table th {
     max-width: 800px;
 }
 
-/*
-.search-hints td {
-    vertical-align: top;
-    padding-bottom: 10px;
-}
-
-.search-hints td:first-child {
-    padding-right: 10px;
-}
-*/
 .table {
   display: table; /* Makes the div act like a table */
 }
@@ -182,13 +216,6 @@ table th {
 .vab td {
     vertical-align: bottom;
 }
-
-/*
-.row div:first-child {
-    font-weight: bold;
-    padding-right: 20px;
-}
-*/
 
 .cell {
   display: table-cell; /* Makes the div act like a table cell */
@@ -234,7 +261,7 @@ textarea {
 
 .read-only p {
     margin: 0 0 1em 0;
-    line-height: 1.3em;
+    line-height: 1.2em;
 }
 
 div.read-only {
@@ -251,30 +278,6 @@ div.read-only {
    width: 100%;
  }
 
- /*
-.scanform {
-    flex: 1 1 0;
-    margin-bottom: 50px; 
-    display:flex; 
-    flex-flow:column nowrap; 
-    justify-content:flex-start; 
-    align-items:flex-start; 
-}
-.scanform textarea, .scanform input {
-    font-size: inherit;
-    margin-bottom: 15px;
-}
-
-.scanform input {
-    padding: 3px 3px;
-    margin-top: 3px;
-    margin-bottom: 8px;
-    width: 100%;
-    box-sizing: border-box;  
- }
-
-
-*/
 
 label {
     padding-bottom: 3px;
@@ -293,7 +296,8 @@ footer {
 
  form#logout-form  {
     display: block;
-    flex:  0 1 0;
+    width:100px;
+    flex:  0 1 auto;
  }
 
  form#login_form {
