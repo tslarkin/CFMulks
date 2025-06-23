@@ -23,11 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-fyf89yv3)(n299v^v*#&e3gsl^u4_2ga(bbw-aq7_8$eyd-uub'
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['cfmulks.org','127.0.0.1', 'cfmulks-production.up.railway.app','https://cfmulks-production.up.railway.app', ]
 CSRF_TRUSTED_ORIGINS = ['https://cfmulks.org', 'https://cfmulks-production.up.railway.app',]
@@ -83,9 +82,9 @@ WSGI_APPLICATION = 'CFMulks.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "railway",
-        "USER": "postgres",
-        "PASSWORD": "myjfsYfqDcbnbxbXzOqbJUmURcGRBzQH",
+        "NAME": os.environ.get('DATABASE_NAME'),
+        "USER": os.environ.get('DATABASE_USER'),
+        "PASSWORD": os.environ.get('DATABASE_PASS'),
         "HOST": "ballast.proxy.rlwy.net",
         "PORT": "10452",
     }
