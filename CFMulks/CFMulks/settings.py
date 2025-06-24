@@ -82,9 +82,9 @@ WSGI_APPLICATION = 'CFMulks.wsgi.application'
 DATABASES = {
     'default': {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get('DATABASE_NAME'),
-        "USER": os.environ.get('DATABASE_USER'),
-        "PASSWORD": os.environ.get('DATABASE_PASS'),
+        "NAME": os.environ.get('PGDATABASE'),
+        "USER": os.environ.get('PGUSER'),
+        "PASSWORD": os.environ.get('PGPASSWORD'),
         "HOST": "ballast.proxy.rlwy.net",
         "PORT": "10452",
     }
