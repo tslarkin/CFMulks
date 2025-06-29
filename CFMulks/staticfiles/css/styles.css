@@ -21,7 +21,6 @@
     font-style: normal;
 }
 
-
 body {
     margin-bottom: 120px; 
     display:block; 
@@ -43,7 +42,7 @@ nav {
     width:auto;
     display: flex;
     flex-flow:row nowrap; 
-    justify-content:flex-start; 
+    justify-content:center; 
     align-items:baseline; 
     column-gap: 20px;
     color: black;
