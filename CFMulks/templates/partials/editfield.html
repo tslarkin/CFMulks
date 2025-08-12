@@ -5,7 +5,7 @@
      value= "{{ page.seq_num }}">
 {% elif field == 'transcription'%}
 <textarea id="editing" style="width:100%" name="transcription" placeholder="Transcription" 
-    rows="12"  
+    rows="20"  
 class="editfield">{% if page.transcription %}{{ page.transcription}}{% endif %}</textarea>
 {% else %}
 <textarea id="editing" style="width:100%" name="description" placeholder="Comment" 

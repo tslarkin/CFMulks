@@ -218,7 +218,7 @@ class BlockView(ListView):
         block_no = self.request.GET.get('block', 1)
         block_obj = paginator.get_page(block_no)
         context['block_obj'] = block_obj
-        context['block_range'] = paginator.get_elided_page_range(number=block_no, on_each_side=1, on_ends=2)
+        context['block_range'] = paginator.get_elided_page_range(number=block_no, on_each_side=3, on_ends=2)
         return context
     
     def get_queryset(self):
