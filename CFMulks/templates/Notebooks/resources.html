@@ -1,0 +1,11 @@
+{% extends "Notebooks/base.html" %}
+{% load static %}
+
+{% block style %}
+<style>body{max-width:800px; margin-left:auto; margin-right:auto;}</style>
+{% endblock style %}
+{% block content %}
+<ul>
+<li><a href="{% url 'biosketch' %}">Biographical Sketch of Mulks</a></li>
+</ul>
+{% endblock content %}

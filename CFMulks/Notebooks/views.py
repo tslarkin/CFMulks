@@ -17,6 +17,12 @@ import markdown2
 def search(request):
     return render(request, "Notebooks/search.html")
 
+def resources(request):
+    return render(request, "Notebooks/resources.html")
+
+def biosketch(request):
+    return render(request, "Notebooks/biosketch.html")
+
 def searchresults(request):
     search = request.GET.get("search", "")
     if len(search) == 0:

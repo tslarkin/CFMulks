@@ -30,6 +30,7 @@
             {% if not request.path == '/login/' %}<a href="{% url 'login' %}">Login</a>{% endif %}
         {% endif %}
         {% if not request.path == '/search/' %}<a style="order:5" href="{% url 'search' %}">Search</a>{% endif %}
+         {% if not request.path == '/resources/' %}<a style="order:6" href="{% url 'resources' %}">Resources</a>{% endif %}
     {% endblock nav%}
     </nav>
 </header>
