@@ -2,7 +2,7 @@
 <div id="page-n">
     <h2>{{page.notebook.roman_numeral}}{{page.name}}</h2>
 
-    <div id="{{page.name}}" style="display:flex; flex-direction:row; column-gap: 40px" >
+    <div id="{{page.name}}" style="display:flex; flex-direction:row; flex-wrap:wrap; column-gap: 40px" >
 
         <div class="read-only">
 <!--
@@ -20,8 +20,8 @@
                 {% include 'partials/showfield.html' with  field='description' %}
             </div>
         </div>
-        <figure>
-            <img src="{% static 'img' %}/{{page.notebook.name}}/{{page.file}}"/>
+        <figure style="min-width:750px">
+            <img  src="{% static 'img' %}/{{page.notebook.name}}/{{page.file}}"/>
         </figure>
     </div>
 </div>
