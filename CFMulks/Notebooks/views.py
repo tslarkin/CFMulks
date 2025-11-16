@@ -38,6 +38,8 @@ def searchresults(request):
         bigQ &= q
     records = Scan.objects.filter(bigQ).order_by('file')
     page_set = "-".join(str(record.id) for record in records)
+    filter = list(records.values_list('id', flat=True))
+    request.session['filter'] = filter
     hints = []
     for record in records:
         transcription_hints = get_hints('transcription', terms, page_set, record)
@@ -84,7 +86,7 @@ def get_hints(field_name, terms, page_set, record):
             if label_p:
                 label = record.notebook.roman_numeral()+record.name() if field_name == "transcription" else "Notes"
                 label_p = False
-            url = f"/show_page_set/{record.id}/{page_set}/"
+            url = f"/show_page_set/{record.id}/"
             hint = f'<a class="row" style="color:black; text-decoration:none;" href="{url}">'\
                 +f'<div class="cell label {field_name}">{label}</div>'\
                 +f'<div class="cell {field_name}">{prefix}' + field[a:spanstart] + '<u>'+text+'</u>' + field[spanend:b] + suffix+'</div>'\
@@ -112,7 +114,7 @@ def get_notes(field_name, terms, page_set, record):
     field = re.sub(pattern, "", field)
     field = markdown2.markdown(field, extras={'break-on_backslash': True, 'tables': None, 'strike': None})
     field = re.sub(r"</?p>", "", field)
-    url = f"/show_page_set/{record.id}/{page_set}/"
+    url = f"/show_page_set/{record.id}/"
     hint = f'<div class="row" style="color:black; text-decoration:none;">'\
         +f'<div class="cell label {field_name}">Notes</div>'\
         +f'<div class="cell {field_name}"> {field} </div>'\
@@ -134,17 +136,17 @@ def show_page(request, **kwargs):
         block_obj = paginator.get_page(page)
         return render(request, 'Notebooks/page.html', {'page':page, 'block_obj': block_obj})
 
-def show_page_set(request, focus_id, page_set_ids):
+def show_page_set(request, focus_id):
     is_page_number = focus_id[0] == 'P'
     if is_page_number:
         focus_id = focus_id[1:]
     focus_id = int(focus_id)
-    numbers = [int(x) for x in page_set_ids.split('-')]
+    numbers = request.session['filter']
     pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
     paginator = Paginator(pageset,1)
     index = focus_id if is_page_number else numbers.index(focus_id)+1
     block_obj = paginator.get_page(index)
-    response = render(request, 'Notebooks/page.html', {'block_obj': block_obj, 'page_set_ids': page_set_ids})
+    response = render(request, 'Notebooks/page.html', {'block_obj': block_obj})
     #response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     return response
 

@@ -3,7 +3,7 @@
 {% block content %}
 <div style="display:flex; flex:row nowrap; justify-content:center; align-items: baseline">
 {% if block_obj.has_previous %}
-    <a class="set-navigator" href="/show_page_set/P{{block_obj.previous_page_number}}/{{page_set_ids}}">
+    <a class="set-navigator" href="/show_page_set/P{{block_obj.previous_page_number}}}">
         ☜
     </a>
 {% else %}
@@ -11,7 +11,7 @@
 {% endif%}
 |
 {% if block_obj.has_next %}
-        <a class="set-navigator" href="/show_page_set/P{{block_obj.next_page_number}}/{{page_set_ids}}">
+        <a class="set-navigator" href="/show_page_set/P{{block_obj.next_page_number}}">
             ☞
     </a>
 {% else %}
