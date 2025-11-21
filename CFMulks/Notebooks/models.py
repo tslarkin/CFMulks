@@ -1,6 +1,7 @@
 from django.db import models
 import re
 from roman import toRoman
+from taggit.managers import TaggableManager
 
 class Notebook(models.Model):
     name = models.CharField(max_length=50)
@@ -16,6 +17,7 @@ class Scan(models.Model):
     seq_num = models.CharField(20, blank=True)
     transcription = models.TextField(blank=True)
     description = models.TextField(blank=True)
+    tags = TaggableManager()
 
     def __str__(self):
         f"Scan {self.name}"
