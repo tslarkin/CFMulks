@@ -1,6 +1,7 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
+{% block head %}
 <head>
   <title>
     {% block title %}CFMulks Notebooks{% endblock %}
@@ -11,6 +12,7 @@
 {% block style %}
 {% endblock style %}
 </head>
+{% endblock head %}
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block header %}
 <header>

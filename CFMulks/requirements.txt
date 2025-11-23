@@ -1,6 +1,10 @@
 asgiref==3.8.1
 Django==5.2
+django-appconf==1.2.0
+django-autocomplete-light==3.12.1
 django-environ==0.12.0
+django-select2==8.4.3
+django-taggit==6.1.0
 gunicorn==23.0.0
 latex2mathml==3.78.0
 markdown2==2.5.3

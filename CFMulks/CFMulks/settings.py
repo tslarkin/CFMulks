@@ -34,6 +34,8 @@ CSRF_TRUSTED_ORIGINS = ['https://cfmulks.org', 'https://cfmulks-production.up.ra
 # Application definition
 
 INSTALLED_APPS = [
+    'dal',
+    'dal_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'taggit',
+    'django_select2',
     'Notebooks',
  ]
 

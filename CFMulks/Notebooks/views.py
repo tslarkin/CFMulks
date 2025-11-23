@@ -13,6 +13,10 @@ from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 import markdown2
+from django.http import JsonResponse, HttpResponseBadRequest
+from taggit.models import Tag
+from .forms import ScanTagsForm
+from dal import autocomplete
 
 def search(request):
     return render(request, "Notebooks/search.html")
@@ -137,18 +141,25 @@ def show_page(request, **kwargs):
         return render(request, 'Notebooks/page.html', {'page':page, 'block_obj': block_obj})
 
 def show_page_set(request, focus_id):
-    is_page_number = focus_id[0] == 'P'
-    if is_page_number:
-        focus_id = focus_id[1:]
-    focus_id = int(focus_id)
-    numbers = request.session['filter']
-    pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
-    paginator = Paginator(pageset,1)
-    index = focus_id if is_page_number else numbers.index(focus_id)+1
-    block_obj = paginator.get_page(index)
-    response = render(request, 'Notebooks/page.html', {'block_obj': block_obj})
-    #response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
-    return response
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax:
+        if request.method == 'POST':
+            data = {'message': 'Success!'}
+            return JsonResponse(data)
+        elif request.method == 'GET':
+            data = {'items': ['item1', 'item2']}
+    else:
+        is_page_number = focus_id[0] == 'P'
+        if is_page_number:
+            focus_id = focus_id[1:]
+        focus_id = int(focus_id)
+        numbers = request.session['filter']
+        pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
+        paginator = Paginator(pageset,1)
+        index = focus_id if is_page_number else numbers.index(focus_id)+1
+        block_obj = paginator.get_page(index)
+        response = render(request, 'Notebooks/page.html', {'block_obj': block_obj})
+        return response
 
 def partial_page(request, **kwargs):
     block = request.GET.get('block')
@@ -257,3 +268,29 @@ class BlockView(ListView):
             target = "/block/"+str(notebook_id)+"/?block="+str(block_number)
             return redirect(target)
         return HttpResponse()
+
+def editTags (request, scan_id):
+    scan = Scan.objects.get(pk=int(scan_id))
+    if request.method == 'GET':
+        form = ScanTagsForm(instance=scan)
+        return render(request, 'Notebooks/tags.html', {'form': form})
+    if request.method == 'POST':
+        form = ScanTagsForm(request.POST, instance=scan)
+        form.save()
+        return render(request, 'Notebooks/tags.html', {'form': form})
+    return HttpResponse()
+
+class TagAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+
+        qs = Tag.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs
+
+    def get_create_option(self, context, q):
+        return []
+    

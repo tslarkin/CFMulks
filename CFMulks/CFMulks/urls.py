@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from Notebooks import views
+from Notebooks.views import TagAutocomplete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,5 +38,13 @@ urlpatterns = [
     path('search/searchresults/', views.searchresults, name='searchresults'),
     path('show_page/<int:pageid>', views.show_page, name='show_page'),
     path('partial_page/', views.partial_page, name='partial_page'),
-    path('show_page_set/<str:focus_id>/', views.show_page_set, name='show_page_set')
+    path('show_page_set/<str:focus_id>/', views.show_page_set, name='show_page_set'),
+    path('select2/', include('django_select2.urls', namespace='django_select2')),
+    path('editTags/<str:scan_id>', views.editTags, name='editTags'),
+    path(
+        'tag-autocomplete/',
+        TagAutocomplete.as_view(),
+        name='tag-autocomplete',
+    ),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

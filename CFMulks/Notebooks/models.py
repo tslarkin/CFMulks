@@ -2,6 +2,7 @@ from django.db import models
 import re
 from roman import toRoman
 from taggit.managers import TaggableManager
+from taggit.models import Tag
 
 class Notebook(models.Model):
     name = models.CharField(max_length=50)
@@ -17,10 +18,10 @@ class Scan(models.Model):
     seq_num = models.CharField(20, blank=True)
     transcription = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    tags = TaggableManager()
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
-        f"Scan {self.name}"
+        f"Scan {self.file}"
 
     def name(self):
         x = re.match(r'IMG(_\d{4}).jpe?g', self.file)

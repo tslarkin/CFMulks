@@ -1,5 +1,15 @@
+{# Shows records in five record blocks. Uses bottom of page navigation. #}
 {% extends "Notebooks/base.html" %}
 {% load static %}
+{% block head %}
+{{ block.super }}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{% endblock head %}
+
 {% load notebook_extras %}
 
 {% block content %}
@@ -56,4 +66,36 @@
     {% endfor %}
     </div>
 </footer>
-{% endblock %}
+<script>
+    $(function() {
+        $("#tags").autocomplete({ // Replace 'id_tags' with your actual input field ID
+            source: "{% url 'tag_autocomplete' %}",
+            minLength: 2, // Minimum characters before autocomplete starts
+            select: function(event, ui) {
+                var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
+                var selectedTag = ui.item.value;
+
+                if (!currentTags.includes(selectedTag)) {
+                    currentTags.push(selectedTag);
+                }
+                $(this).val(currentTags.join(', '));
+                return true; // Prevent default action (replacing input with selected value)
+            },
+            change: function(event, ui) {
+                // If the user types a new tag and blurs the input, add it
+                if (!ui.item) {
+                    var newTag = $(this).val().trim();
+                    if (newTag) {
+                        var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
+                        if (!currentTags.includes(newTag)) {
+                            currentTags.push(newTag);
+                        }
+                        $(this).val(currentTags.join(', '));
+                    }
+                }
+            }
+        });
+    });
+
+</script>
+{% endblock footer%}
