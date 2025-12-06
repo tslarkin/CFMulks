@@ -131,20 +131,6 @@ def get_notes(field_name, terms, index, record):
     hint = mark_safe(hint)
     return [hint]
    
-def show_page(request, **kwargs):
-    pageid = kwargs['pageid']
-    # Leaving the old model name unchanged
-    page = Scan.objects.get(pk=pageid)
-    pages = request.GET.get('pages')
-    if pages == None:
-        return render(request, 'Notebooks/page.html', {'page':page})            
-    else:
-        numbers = [int(x) for x in pages.split('-')]
-        pages = [Scan.objects.get(pk=n) for n in numbers].order_by('file')
-        paginator = Paginator(pages,1)
-        block_obj = paginator.get_page(page)
-        return render(request, 'Notebooks/page.html', {'page':page, 'block_obj': block_obj})
-
 def show_page_set(request):
     if request.method == 'POST':
         new_page=request.POST.get('block_num')
@@ -222,86 +208,6 @@ def home(request):
     request.session['filter'] = []
     books = Notebook.objects.all().order_by('name')
     return render(request, 'Notebooks/home.html', {'notebooks': books})
-
-def show___scan(request, **kwargs):
-    scanid = kwargs['scanid']
-    scan = Scan.objects.get(pk=scanid)
-    pages = request.GET.get('pages').split(",")
-    numbers = [int(x) for x in pages]
-    paginator = Paginator(numbers,1)
-    page_obj = paginator.get_page(scanid)
-    return render(request, 'Notebooks/scan.html', {'scan':scan, 'page_obj': page_obj})
-
-class BlockView(ListView):
-    paginate_by = 1
-    model = Scan
-    ordering = ["file"]
-    template_name = "Notebooks/block1.html"
-    queryset = Scan.objects.none()
-
-    def maketagform(self, scan):
-        form = ScanTagsForm(instance=scan)
-        result = render(None, 'Notebooks/tags.html', {'form': form})
-        return form
-
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pages = self.get_queryset()
-        paginator = Paginator(pages, self.paginate_by)
-        block_no = self.request.GET.get('block', 1)
-        block_obj = paginator.get_page(block_no)
-        forms = []
-        scans = []
-        for scan in block_obj.object_list:
-            form = self.maketagform(scan)
-            forms.append(form)
-            scans.append(scan)
-        iteration = zip(scans, forms)
-        context['iteration'] = iteration
-        context['page'] = scans[0]
-        context['form'] = ScanTagsForm(instance=scans[0])
-        context['block_obj'] = block_obj
-        context['block_range'] = paginator.get_elided_page_range(number=block_no, on_each_side=3, on_ends=2)
-        return context
-    
-    def get_queryset(self):
-        numbers = self.request.session['filter']
-        if len(numbers) > 0:
-            qs = Scan.objects.filter(pk__in=numbers).order_by('file')
-            self.request.session['filter'] = []
-        else:
-            notebook_id = self.kwargs['notebook_id']
-            qs = super().get_queryset().filter(notebook__id=notebook_id)
-        return qs
-    
-    def post(self, request, **kwargs):
-        if request.method == 'POST':
-            form_type = request.POST.get('form_type')
-            # form_type is either 'scan_update' or 'jump'
-            # In the first case, POST.page_num is the current page. Need to update the ORM.
-            # In the second case, POST.page_num is the page to jump to. Just jump
-            if form_type == 'scan_update':
-                scan = ScanForm(request.POST, instance=scan)
-                scan.save()
-                return HttpResponseRedirect("#"+anchor)
-            block_number = request.POST.get("block_num", 1)
-            notebook_id = self.kwargs['notebook_id']
-            target = "/block/"+str(notebook_id)+"/?block="+str(block_number)
-            return redirect(target)
-        return HttpResponse()
-
-def editTags (request, scan_id):
-    scan = Scan.objects.get(pk=int(scan_id))
-    if request.method == 'GET':
-        form = ScanTagsForm(instance=scan)
-        result = render(request, 'Notebooks/tags.html', {'form': form})
-        return render(request, 'Notebooks/tags.html', {'form': form})
-    if request.method == 'POST':
-        form = ScanTagsForm(request.POST, instance=scan)
-        form.save()
-        return render(request, 'Notebooks/tags.html', {'form': form})
-    return HttpResponse()
 
 class TagAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
