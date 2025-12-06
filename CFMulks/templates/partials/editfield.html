@@ -1,17 +1,25 @@
 {% load notebook_extras %}
 
-{% if field == 'seq_num'%}
-<input id="editing" class="sequence" name="seq_num" type="number"  
-     value= "{{ page.seq_num }}">
-{% elif field == 'transcription'%}
-<textarea id="editing" style="width:100%" name="transcription" placeholder="Transcription" 
-    rows="20"  
-class="editfield">{% if page.transcription %}{{ page.transcription}}{% endif %}</textarea>
+{% if field == 'transcription' %}
+<textarea id="editing" style="width:100%" name="transcription" 
+	placeholder="Transcription" rows="20"  class="editfield">
+	{% if page.transcription %}
+		{{ page.transcription}}
+	{% endif %}
+</textarea>
+{% elif field == 'description' %}
+<textarea id="editing" style="width:100%" name="description"
+	placeholder="Comment" rows="12"  class="editfield">
+	{% if page.description %}
+		{{ page.description}}
+	{% endif %}
+</textarea>
 {% else %}
-<textarea id="editing" style="width:100%" name="description" placeholder="Comment" 
-    rows="12"  
-   class="editfield">{% if page.description %}{{ page.description}}{% endif %}</textarea>
+{{ form.css }}
+<input id="editing" class="showfield" name="tags"
+	value = "{{ page.tags | render_tags }}">
 {% endif %}
+
 <div id="end-editing" style="padding-top: 10px; width: 100%; display:flex; flex-flow: row nowrap; justify-content: space-around"
     hx-swap="outerHTML" 
     hx-target="#editing"

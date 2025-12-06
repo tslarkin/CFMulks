@@ -15,7 +15,7 @@ from django.urls import reverse
 import markdown2
 from django.http import JsonResponse, HttpResponseBadRequest
 from taggit.models import Tag
-from .forms import ScanTagsForm
+from .forms import ScanTagsForm, Autotags
 from dal import autocomplete
 
 def search(request):
@@ -41,12 +41,16 @@ def searchresults(request):
         q = Q(transcription__regex=r'(?i).*'+term + r"[a-z]*\s?.*")
         bigQ &= q
     records = Scan.objects.filter(bigQ).order_by('file')
+    if len(records) == 0:
+        return HttpResponse(status = 200)
     page_set = "-".join(str(record.id) for record in records)
     filter = list(records.values_list('id', flat=True))
     request.session['filter'] = filter
     hints = []
+    index = 1
     for record in records:
-        transcription_hints = get_hints('transcription', terms, page_set, record)
+        transcription_hints = get_hints('transcription', terms, index, record)
+        index += 1
         hints+= transcription_hints
 #        description_hints = get_notes('description', terms, page_set,  record)
         
@@ -56,7 +60,7 @@ def searchresults(request):
         hints.append('<div class="row" style="text-align: center">No Matches Found</div>')
     return render(request, "partials/searchresults.html", {'hints': hints})
 
-def get_hints(field_name, terms, page_set, record):
+def get_hints(field_name, terms, index, record):
     field = getattr(record, field_name)
     if len(field) == 0:
         return []
@@ -76,6 +80,7 @@ def get_hints(field_name, terms, page_set, record):
     end = len(field)
     hints = []
     label_p = True
+    notebook = record.notebook.id
     for term in terms:
         pattern = "("+term+")"
         matches = re.finditer(pattern, field, re.IGNORECASE)
@@ -90,7 +95,7 @@ def get_hints(field_name, terms, page_set, record):
             if label_p:
                 label = record.notebook.roman_numeral()+record.name() if field_name == "transcription" else "Notes"
                 label_p = False
-            url = f"/show_page_set/{record.id}/"
+            url = f"/show_page_set/?page={index}&notebook={notebook}"
             hint = f'<a class="row" style="color:black; text-decoration:none;" href="{url}">'\
                 +f'<div class="cell label {field_name}">{label}</div>'\
                 +f'<div class="cell {field_name}">{prefix}' + field[a:spanstart] + '<u>'+text+'</u>' + field[spanend:b] + suffix+'</div>'\
@@ -99,7 +104,7 @@ def get_hints(field_name, terms, page_set, record):
             hints.append(hint)
     return hints
 
-def get_notes(field_name, terms, page_set, record):
+def get_notes(field_name, terms, index, record):
     field = getattr(record, field_name)
     if len(field) == 0:
         return []
@@ -140,25 +145,26 @@ def show_page(request, **kwargs):
         block_obj = paginator.get_page(page)
         return render(request, 'Notebooks/page.html', {'page':page, 'block_obj': block_obj})
 
-def show_page_set(request, focus_id):
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    if is_ajax:
-        if request.method == 'POST':
-            data = {'message': 'Success!'}
-            return JsonResponse(data)
-        elif request.method == 'GET':
-            data = {'items': ['item1', 'item2']}
+def show_page_set(request):
+    if request.method == 'POST':
+        new_page=request.POST.get('block_num')
+        notebook_id = request.POST.get('notebook')
+        target = f"/show_page_set/?page={new_page}&notebook={notebook_id}"
+        return redirect(target)
     else:
-        is_page_number = focus_id[0] == 'P'
-        if is_page_number:
-            focus_id = focus_id[1:]
-        focus_id = int(focus_id)
         numbers = request.session['filter']
-        pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
+        notebook_id = request.GET.get('notebook')
+        if len(numbers) > 0:
+            pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
+        else:
+            pageset = Scan.objects.filter(notebook__id=notebook_id).order_by('file')
+        page_number = request.GET.get('page') or '1'
         paginator = Paginator(pageset,1)
-        index = focus_id if is_page_number else numbers.index(focus_id)+1
-        block_obj = paginator.get_page(index)
-        response = render(request, 'Notebooks/page.html', {'block_obj': block_obj})
+        block_obj = paginator.get_page(page_number)
+        page = block_obj.object_list[0]
+        form = ScanTagsForm(instance=page)
+        block_range = paginator.get_elided_page_range(number=page_number, on_each_side=2, on_ends=2)
+        response = render(request, 'Notebooks/block1.html', {'block_range':block_range, 'block_obj': block_obj, 'page': page, 'form': form, 'notebook': notebook_id })
         return response
 
 def partial_page(request, **kwargs):
@@ -170,7 +176,8 @@ def editfield(request):
     page = Scan.objects.get(pk=page_id)
     field = request.GET.get('field')
     data = {'page': page, 'field': field}
-    return render(request, 'partials/editfield.html', data)
+    result = render(request, 'partials/editfield.html', data)
+    return result
 
 def showfield(request):
     page_id = request.GET.get('page')
@@ -212,6 +219,7 @@ def login_view(request):
     return render(request, 'registration/login.html', {'form': form}) # Render login page for GET requests
 
 def home(request):
+    request.session['filter'] = []
     books = Notebook.objects.all().order_by('name')
     return render(request, 'Notebooks/home.html', {'notebooks': books})
 
@@ -225,10 +233,17 @@ def show___scan(request, **kwargs):
     return render(request, 'Notebooks/scan.html', {'scan':scan, 'page_obj': page_obj})
 
 class BlockView(ListView):
-    paginate_by = 5
+    paginate_by = 1
     model = Scan
     ordering = ["file"]
-    template_name = "Notebooks/block.html"
+    template_name = "Notebooks/block1.html"
+    queryset = Scan.objects.none()
+
+    def maketagform(self, scan):
+        form = ScanTagsForm(instance=scan)
+        result = render(None, 'Notebooks/tags.html', {'form': form})
+        return form
+
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -236,13 +251,28 @@ class BlockView(ListView):
         paginator = Paginator(pages, self.paginate_by)
         block_no = self.request.GET.get('block', 1)
         block_obj = paginator.get_page(block_no)
+        forms = []
+        scans = []
+        for scan in block_obj.object_list:
+            form = self.maketagform(scan)
+            forms.append(form)
+            scans.append(scan)
+        iteration = zip(scans, forms)
+        context['iteration'] = iteration
+        context['page'] = scans[0]
+        context['form'] = ScanTagsForm(instance=scans[0])
         context['block_obj'] = block_obj
         context['block_range'] = paginator.get_elided_page_range(number=block_no, on_each_side=3, on_ends=2)
         return context
     
     def get_queryset(self):
-        notebook_id = self.kwargs['notebook_id']
-        qs = super().get_queryset().filter(notebook__id=notebook_id)
+        numbers = self.request.session['filter']
+        if len(numbers) > 0:
+            qs = Scan.objects.filter(pk__in=numbers).order_by('file')
+            self.request.session['filter'] = []
+        else:
+            notebook_id = self.kwargs['notebook_id']
+            qs = super().get_queryset().filter(notebook__id=notebook_id)
         return qs
     
     def post(self, request, **kwargs):
@@ -252,15 +282,7 @@ class BlockView(ListView):
             # In the first case, POST.page_num is the current page. Need to update the ORM.
             # In the second case, POST.page_num is the page to jump to. Just jump
             if form_type == 'scan_update':
-                scan_id = request.POST.get("id")
-                scan = Scan.objects.get(pk=int(scan_id))
-                anchor = scan.name()
-                transcription = request.POST.get("transcription")
-                description = request.POST.get("description")
-                seq_num = request.POST.get("seq_num")
-                scan.seq_num = seq_num
-                scan.transcription = transcription
-                scan.description = description
+                scan = ScanForm(request.POST, instance=scan)
                 scan.save()
                 return HttpResponseRedirect("#"+anchor)
             block_number = request.POST.get("block_num", 1)
@@ -273,6 +295,7 @@ def editTags (request, scan_id):
     scan = Scan.objects.get(pk=int(scan_id))
     if request.method == 'GET':
         form = ScanTagsForm(instance=scan)
+        result = render(request, 'Notebooks/tags.html', {'form': form})
         return render(request, 'Notebooks/tags.html', {'form': form})
     if request.method == 'POST':
         form = ScanTagsForm(request.POST, instance=scan)
@@ -293,4 +316,20 @@ class TagAutocomplete(autocomplete.Select2QuerySetView):
 
     def get_create_option(self, context, q):
         return []
-    
+
+def TagPost(request):
+    scan_id = request.POST.get('scan_id')
+    scan = Scan.objects.get(pk=int(scan_id))
+    tags = []
+    if 'remove' in request.POST:
+        to_remove = request.POST.getlist('remove')
+        tags = list(scan.tags.values_list('name', flat=True))
+        for tag in to_remove:
+            tags.remove(tag)
+    elif 'clear' in request.POST:
+        tags=[]
+    else:
+        tags = request.POST.getlist('tags[]')        
+    scan.tags.set(tags, clear=True)
+    scan.save()
+    return HttpResponse()

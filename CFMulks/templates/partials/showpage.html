@@ -1,65 +1,39 @@
 {# All roads lead to this representation of a single record #}
 {% load static %}
 
-<div id="page-n">
+<div id="page-{{page.name}}">
     <h2>{{page.notebook.roman_numeral}}{{page.name}}</h2>
 
     <div id="{{page.name}}" style="display:flex; flex-direction:row; flex-wrap:wrap; column-gap: 40px" >
 
         <div class="read-only">
-<!--
-            <div>
-                <div  class="field-title">Index</div>
-                {% include "partials/showfield.html" with field="seq_num" %}
-            </div>
--->
             <div>
                 <div  class="field-title">Transcription</div>
                 {% include 'partials/showfield.html' with  field='transcription' %}
             </div>
-            <div  >
+            <div>
                 <div  class="field-title">Note</div>
                 {% include 'partials/showfield.html' with  field='description' %}
             </div>
-            <form>
-                <label for="tags">Tags</label>
-                <input id="tags" type="text" placeholder="Tags">
-            </form>
+            <div>
+                <div class="field-title" >Tags</div>
+                <form  method="POST" id="tags">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                <table style="display: none">
+                    {{ view.formset.empty_form }}
+                </table>
+
+                <table>
+                    {{ view.formset }}
+                </table>
+                </form>
+                {{ form.media.js }}
+            </div>
         </div>
-        <figure style="min-width:750px">
+        <figure>
             <img  src="{% static 'img' %}/{{page.notebook.name}}/{{page.file}}"/>
         </figure>
+
     </div>
 </div>
-<script>
-    $(function() {
-        $("#tags").autocomplete({ // Replace 'id_tags' with your actual input field ID
-            source: "{% url 'tag_autocomplete' %}",
-            minLength: 2, // Minimum characters before autocomplete starts
-            select: function(event, ui) {
-                var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
-                var selectedTag = ui.item.value;
-
-                if (!currentTags.includes(selectedTag)) {
-                    currentTags.push(selectedTag);
-                }
-                $(this).val(currentTags.join(', '));
-                return true; // Prevent default action (replacing input with selected value)
-            },
-            change: function(event, ui) {
-                // If the user types a new tag and blurs the input, add it
-                if (!ui.item) {
-                    var newTag = $(this).val().trim();
-                    if (newTag) {
-                        var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
-                        if (!currentTags.includes(newTag)) {
-                            currentTags.push(newTag);
-                        }
-                        $(this).val(currentTags.join(', '));
-                    }
-                }
-            }
-        });
-    });
-
-</script>

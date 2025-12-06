@@ -14,7 +14,7 @@
 
 <ul>
     {% for nb in notebooks %}
-    <li><a href="/block/{{nb.id}}/?block=1">Notebook {{nb.name}}<a></li>
+    <li><a href="/show_page_set/?page=1&notebook={{nb.id}}">Notebook {{nb.name}}<a></li>
     {% endfor %}
 </ul>
 

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'whitenoise.runserver_nostatic',
     'taggit',
-    'django_select2',
+#    'django_select2',
     'Notebooks',
  ]
 

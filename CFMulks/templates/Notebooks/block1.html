@@ -6,11 +6,11 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet">
     <link href="/static/autocomplete_light/select2.css" media="screen" rel="stylesheet">
     <link href="/static/autocomplete_light/i18n/en.js">
+    {{ form.media.css }}
+
 {% endblock head %}
 
 {% load notebook_extras %}
@@ -19,29 +19,100 @@
 
 
 {% include "partials/showpage.html" %}
-<div>
-    <div class="field-title" >Tags</div>
-    {{ form.media.css }}
-    <form  method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-    </form>
-</div>
 
 
 {% endblock content %}
 
 {% block footer %}
-    
+<script>
+    $(document).on('select2:clear', function(e) {
+    // Prevent the default Select2 removal behavior if you want to handle it manually
+    //e.preventDefault(); 
+    // Get the parent li element, which represents the selected item
+    //var $selectedItem = $(this).closest('.select2-selection__clear');
+
+    // You can access information about the removed item here,
+    // for example, its text or value if stored in data attributes.
+    $.ajax({
+        url: '{% url 'tag_post'%}', // URL of your Django view to handle tag saving
+        type: 'POST',
+        data: {
+            'scan_id': {{page.id}},
+            'clear': 'all',
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() // Include CSRF token
+        },
+        success: function(response) {
+            console.log('Tags cleared successfully:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error clearing tags:', error);
+        }
+    });
+});
+
+
+$(document).on('click', '.select2-selection__choice__remove', function(e) {
+    // Prevent the default Select2 removal behavior if you want to handle it manually
+    // e.preventDefault(); 
+
+    // Get the parent li element, which represents the selected item
+    var $selectedItem = $(this).closest('.select2-selection__choice');
+
+    // You can access information about the removed item here,
+    // for example, its text or value if stored in data attributes.
+    var itemText = $selectedItem.text().trim().slice(1); // Get the text of the removed item
+    $.ajax({
+        url: '{% url 'tag_post'%}', // URL of your Django view to handle tag saving
+        type: 'POST',
+        data: {
+            'scan_id': {{page.id}},
+            'remove': itemText,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() // Include CSRF token
+        },
+        success: function(response) {
+            console.log('Tags pruned successfully:', response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error pruning tags:', error);
+        }
+    });
+
+    // If you prevented the default behavior, you might need to manually
+    // remove the item from the underlying <select> element or data source.
+    // Example: If you have a hidden input storing IDs, you might update it here.
+    // Or, if using a multi-select, you might trigger a change on the original select.
+});
+
+$(document).ready(function() {
+    $('#id_tags').on('select2:select', function() {
+        var selectedTags = $(this).val(); // Get an array of selected tag values
+        $.ajax({
+            url: '{% url 'tag_post'%}', // URL of your Django view to handle tag saving
+            type: 'POST',
+            data: {
+                'scan_id': {{page.id}},
+                'tags': selectedTags,
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() // Include CSRF token
+            },
+            success: function(response) {
+                console.log('Tags saved successfully:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error saving tags:', error);
+            }
+        });
+    });
+});
+</script>
 <!-- https://realpython.com/django-pagination/ -->
 <footer>
 
     <div style="margin: 5px 0 15px 0">
     {% if block_obj.has_previous %}
-        <a href="?block=1">
+        <a href="?page=1&notebook={{notebook}}">
             ⏮️
         </a>
-        <a href="?block={{block_obj.previous_page_number}}">
+        <a href="?page={{block_obj.previous_page_number}}&notebook={{notebook}}">
             ◀️
         </a>
     {% endif%}
@@ -50,16 +121,17 @@
         <form method="POST" action="" style="display:inline;">
             {% csrf_token %}
             <input type="hidden" name="form_type" value="jump">
+            <input type="hidden" name="notebook" value={{notebook}}>
             <input  style="font-size:16px; width: 40px; text-align:right;" 
                 name="block_num" min=1 max={{block_obj.paginator.num_pages}} type="number" value={{ block_obj.number}}>
         </form>    
     </span> <span style="font-size:16px">of {{block_obj.paginator.num_pages}}</span>
 
     {% if block_obj.has_next %}
-        <a href="?block={{block_obj.next_page_number}}">
+        <a href="?page={{block_obj.next_page_number}}&notebook={{notebook}}">
             ▶️
         </a>
-        <a href="?block={{block_obj.paginator.num_pages}}">
+        <a href="?page={{block_obj.paginator.num_pages}}&notebook={{notebook}}">
             ⏭️
         </a>
     {% endif%}
@@ -70,7 +142,7 @@
             {{block_number}}
         {% else %}
              <a
-                href="?block={{block_number}}"
+                href="?page={{block_number}}&notebook={{notebook}}"
                 class="{% if block_number == block_obj.number %} current {% endif %}"
             >
                 {{block_number}}

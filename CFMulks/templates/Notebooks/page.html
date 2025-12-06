@@ -29,8 +29,17 @@ from taggit.managers import TaggableManager
 {% endif%}
 </div>
 <div id="page-partial">
-{% for page in block_obj %}
-    {% include "partials/showpage.html" %}
-{% endfor %}
+
+{% include "partials/showpage.html"  %}
+<div>
+    <div class="field-title" >Tags</div>
+    {{ form.media.css }}
+    <form  method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Save">
+    </form>
+</div>
+
 </div>
 {% endblock content %}

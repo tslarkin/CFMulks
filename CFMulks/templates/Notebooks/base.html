@@ -13,7 +13,7 @@
 {% endblock style %}
 </head>
 {% endblock head %}
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body hx-config='{"allowEval": }' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block header %}
 <header>
     <h1 style="margin-top: 50px; font-size: 1.6rem; text-align:center; width:100%;">The Notebooks of Charles F. Mulks</h1>

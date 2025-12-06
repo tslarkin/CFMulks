@@ -1,13 +1,48 @@
 {% load notebook_extras %}
 
-{% if field == 'seq_num'%}
-<div class="sequence" 
-    {% if False %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=seq_num" hx-target="this" {% endif %}
->{{ page.seq_num }}</div>
-{% elif field == 'transcription'%}
-<div class="showfield" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=transcription" hx-target="this"  {% endif %}
->{% if page.transcription %}{{ page.transcription | render_markdown}}{% endif %}</div>
+{% if field == 'transcription'%}
+<div class="showfield" 
+	{% if user.is_authenticated %} 
+		hx-swap="outerHTML" 
+		hx-get="/editfield/?page={{page.id}}&field=transcription" 
+		hx-target="this"  
+	{% endif %}
+>
+	{% if page.transcription %}
+		{{ page.transcription | render_markdown}}
+	{% endif %}
+</div>
+{% elif field == 'description' %}
+<div class="showfield description" 
+	{% if user.is_authenticated %} 
+		hx-swap="outerHTML"  
+		hx-get="/editfield/?page={{page.id}}&field=description" 
+		hx-target="this" 
+	{% endif %}
+> 
+    {% if page.description %}
+    	{{ page.description | render_texdown}}
+    {% endif %}
+</div>
 {% else %}
-<div class="showfield description" {% if user.is_authenticated %} hx-swap="outerHTML"  hx-get="/editfield/?page={{page.id}}&field=description" hx-target="this" {% endif %}
->{% if page.description %}{{ page.description | render_texdown}}{% endif %}</div>
+<div class="showfield" 
+	{% if user.is_authenticated %} 
+		hx-swap="outerHTML"
+        hx-on::aftersettle="alert("Settled"); htmx-process();"
+		hx-get="/makeform/{{page.id}}/"
+		 
+	{% endif %}
+>
+	{% if page.tags %}
+    <div class="field-title" >Tags</div>
+    {{ form.media.css }}
+    <form  method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+    </form>
+    {{ form.media.js }}
+</div>
+{{ form.media.js }}
+   	{% endif %}
+</div>
 {% endif %}

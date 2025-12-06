@@ -132,7 +132,7 @@ figure {
     overflow-x: scroll;
     margin-inline-end: 0;
     margin-inline-start: 0;
-   flex: 2 1 0px;
+    flex: 2 1 0;
 }
 table {
     width: 100%;
@@ -273,7 +273,9 @@ textarea {
 div.read-only {
     text-align: left;
     display:flex; 
-    flex: 1 1 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0;
     flex-flow:column nowrap;
     font-family: inherit;
     justify-content: flex-start; 
@@ -319,4 +321,20 @@ footer {
 
 #login_form .btn.btn-dark {
     width: auto;
+}
+.select2-container .select2-search--inline .select2-search__field {
+    height: 30px;
+    width: 100%;
+    border: 1px solid green;
+}
+
+.select2-container {
+  width: 100% !important; /* To ensure container fills its parent */
+  min-width: 250px;       /* Prevent it from getting too narrow */
+  max-width: 400px;       /* Avoid overly large dropdown */
+}
+
+.select2-dropdown {
+  width: auto !important; /* Let dropdown width adapt naturally */
+  min-width: 250px;
 }

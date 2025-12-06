@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="/static/admin/css/autocomplete.css" media="screen" rel="stylesheet">
+    <link href="/static/autocomplete_light/select2.css" media="screen" rel="stylesheet">
+    <link href="/static/autocomplete_light/i18n/en.js">
 {% endblock head %}
 
 {% load notebook_extras %}
@@ -15,14 +18,57 @@
 {% block content %}
 
 
-{% for page in  block_obj %}
+{% for page, form in  iteration %}
 {% include "partials/showpage.html" %}
+<select class="autocomplete-select ui-autocomplete-input" name="my_field_{{ forloop.counter }}">
+            <!-- Options will be dynamically loaded by JavaScript -->
+</select>
 {% endfor %}
+{{ form.media.js }}
+
 {% endblock content %}
 
 {% block footer %}
+    <script>
+        $(function() {
+            $(".autocomplete-select").each(function() {
+                var selectElement = $(this);
+                selectElement.autocomplete({
+                    source: function(request, response) {
+                        $.ajax({
+                            url: "",
+                            dataType: "json",
+                            data: {
+                                term: request.term
+                            },
+                            success: function(data) {
+                                response($.map(data, function(item) {
+                                    return {
+                                        label: item.name,
+                                        value: item.id
+                                    };
+                                }));
+                            },
+                            complete: function() {
+                                console.log("AJAX request completed.");
+                                console.log(data);
+                            }
+                        });
+                    },
+                    minLength: 2, // Minimum characters before triggering autocomplete
+                    select: function(event, ui) {
+                        // Handle selection, e.g., update a hidden input or the select value
+                        selectElement.val(ui.item.value);
+                    }
+                });
+            });
+        });
+    </script>
+    {{ form.media }}
+
 <!-- https://realpython.com/django-pagination/ -->
 <footer>
+
     <div style="margin: 5px 0 15px 0">
     {% if block_obj.has_previous %}
         <a href="?block=1">
@@ -66,36 +112,5 @@
     {% endfor %}
     </div>
 </footer>
-<script>
-    $(function() {
-        $("#tags").autocomplete({ // Replace 'id_tags' with your actual input field ID
-            source: "{% url 'tag_autocomplete' %}",
-            minLength: 2, // Minimum characters before autocomplete starts
-            select: function(event, ui) {
-                var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
-                var selectedTag = ui.item.value;
 
-                if (!currentTags.includes(selectedTag)) {
-                    currentTags.push(selectedTag);
-                }
-                $(this).val(currentTags.join(', '));
-                return true; // Prevent default action (replacing input with selected value)
-            },
-            change: function(event, ui) {
-                // If the user types a new tag and blurs the input, add it
-                if (!ui.item) {
-                    var newTag = $(this).val().trim();
-                    if (newTag) {
-                        var currentTags = $(this).val().split(',').map(s => s.trim()).filter(s => s);
-                        if (!currentTags.includes(newTag)) {
-                            currentTags.push(newTag);
-                        }
-                        $(this).val(currentTags.join(', '));
-                    }
-                }
-            }
-        });
-    });
-
-</script>
 {% endblock footer%}
