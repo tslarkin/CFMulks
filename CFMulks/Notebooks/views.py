@@ -144,7 +144,7 @@ def show_page_set(request):
         else:
             pageset = Scan.objects.filter(notebook__id=notebook_id).order_by('file')
         page_number = request.GET.get('page') or '1'
-        terms = request.GET.get('terms') or None
+        terms = request.GET.get('terms') or ''
         paginator = Paginator(pageset,1)
         block_obj = paginator.get_page(page_number)
         page = block_obj.object_list[0]

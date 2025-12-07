@@ -149,7 +149,7 @@ $(document).ready(function() {
             {{block_number}}
         {% else %}
              <a
-                href="?page={{block_number}}&notebook={{notebook}}"
+                href="?page={{block_number}}&notebook={{notebook}}&terms={{terms}}"
                 class="{% if block_number == block_obj.number %} current {% endif %}"
             >
                 {{block_number}}
