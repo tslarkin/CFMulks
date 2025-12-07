@@ -21,26 +21,10 @@ class ScanTagsForm(autocomplete.FutureModelForm):
 
         widgets = {
             'tags': autocomplete.TaggitSelect2(url='tag-autocomplete',
-                attrs={ 'data-minimum-input-length': 2,
+                attrs={ #'data-minimum-input-length': 1,
                         # This attribute is crucial for inline tag creation (tagging)
                         'data-tags': ',', 
                     }
             ),
         }
 
-class ScanForm(autocomplete.FutureModelForm):
-
-    class Meta:
-        model=Scan
-        fields = ('tags',)
-        widgets = {
-            'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
-        }
-
-class Autotags(autocomplete.FutureModelForm):
-    class Meta:
-        model = Scan
-        fields = ('tags',)
-        widgets = {
-            'tags': autocomplete.TaggitSelect2(url='tag-autocomplete'),
-        }

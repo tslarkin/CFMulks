@@ -15,7 +15,7 @@ from django.urls import reverse
 import markdown2
 from django.http import JsonResponse, HttpResponseBadRequest
 from taggit.models import Tag
-from .forms import ScanTagsForm, Autotags
+from .forms import ScanTagsForm
 from dal import autocomplete
 
 def search(request):
@@ -52,9 +52,6 @@ def searchresults(request):
         transcription_hints = get_hints('transcription', terms, index, record)
         index += 1
         hints+= transcription_hints
-#        description_hints = get_notes('description', terms, page_set,  record)
-        
-#        hints += description_hints
         hints += ['<div class="row" style="height: 30px"></div>']
     if len(hints) == 0:
         hints.append('<div class="row" style="text-align: center">No Matches Found</div>')
@@ -81,6 +78,7 @@ def get_hints(field_name, terms, index, record):
     hints = []
     label_p = True
     notebook = record.notebook.id
+    terms_str = " ".join(terms)
     for term in terms:
         pattern = "("+term+")"
         matches = re.finditer(pattern, field, re.IGNORECASE)
@@ -95,7 +93,7 @@ def get_hints(field_name, terms, index, record):
             if label_p:
                 label = record.notebook.roman_numeral()+record.name() if field_name == "transcription" else "Notes"
                 label_p = False
-            url = f"/show_page_set/?page={index}&notebook={notebook}"
+            url = f"/show_page_set/?page={index}&notebook={notebook}&terms={terms_str}"
             hint = f'<a class="row" style="color:black; text-decoration:none;" href="{url}">'\
                 +f'<div class="cell label {field_name}">{label}</div>'\
                 +f'<div class="cell {field_name}">{prefix}' + field[a:spanstart] + '<u>'+text+'</u>' + field[spanend:b] + suffix+'</div>'\
@@ -135,7 +133,8 @@ def show_page_set(request):
     if request.method == 'POST':
         new_page=request.POST.get('block_num')
         notebook_id = request.POST.get('notebook')
-        target = f"/show_page_set/?page={new_page}&notebook={notebook_id}"
+        terms = request.POST.get('terms')
+        target = f"/show_page_set/?page={new_page}&notebook={notebook_id}&terms={terms}"
         return redirect(target)
     else:
         numbers = request.session['filter']
@@ -145,12 +144,13 @@ def show_page_set(request):
         else:
             pageset = Scan.objects.filter(notebook__id=notebook_id).order_by('file')
         page_number = request.GET.get('page') or '1'
+        terms = request.GET.get('terms') or None
         paginator = Paginator(pageset,1)
         block_obj = paginator.get_page(page_number)
         page = block_obj.object_list[0]
         form = ScanTagsForm(instance=page)
         block_range = paginator.get_elided_page_range(number=page_number, on_each_side=2, on_ends=2)
-        response = render(request, 'Notebooks/block1.html', {'block_range':block_range, 'block_obj': block_obj, 'page': page, 'form': form, 'notebook': notebook_id })
+        response = render(request, 'Notebooks/block1.html', {'terms': terms, 'block_range':block_range, 'block_obj': block_obj, 'page': page, 'form': form, 'notebook': notebook_id })
         return response
 
 def partial_page(request, **kwargs):

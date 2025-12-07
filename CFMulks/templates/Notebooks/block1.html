@@ -16,7 +16,11 @@
 {% load notebook_extras %}
 
 {% block content %}
-
+{% if not terms == '' %}
+<div style="font-size:30px;width=100%;text-align:center;">
+    Search results for "{{terms}}"
+</div>
+{% endif %}
 
 {% include "partials/showpage.html" %}
 
@@ -33,21 +37,23 @@
 
     // You can access information about the removed item here,
     // for example, its text or value if stored in data attributes.
-    $.ajax({
-        url: '{% url 'tag_post'%}', // URL of your Django view to handle tag saving
-        type: 'POST',
-        data: {
-            'scan_id': {{page.id}},
-            'clear': 'all',
-            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() // Include CSRF token
-        },
-        success: function(response) {
-            console.log('Tags cleared successfully:', response);
-        },
-        error: function(xhr, status, error) {
-            console.error('Error clearing tags:', error);
-        }
-    });
+    if (confirm("Delete all tags for this page?") == true) {
+        $.ajax({
+            url: '{% url 'tag_post'%}', // URL of your Django view to handle tag saving
+            type: 'POST',
+            data: {
+                'scan_id': {{page.id}},
+                'clear': 'all',
+                'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val() // Include CSRF token
+            },
+            success: function(response) {
+                console.log('Tags cleared successfully:', response);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error clearing tags:', error);
+            }
+        });
+    }
 });
 
 
@@ -109,10 +115,10 @@ $(document).ready(function() {
 
     <div style="margin: 5px 0 15px 0">
     {% if block_obj.has_previous %}
-        <a href="?page=1&notebook={{notebook}}">
+        <a href="?page=1&notebook={{notebook}}&terms={{terms}}">
             ⏮️
         </a>
-        <a href="?page={{block_obj.previous_page_number}}&notebook={{notebook}}">
+        <a href="?page={{block_obj.previous_page_number}}&notebook={{notebook}}&terms={{terms}}">
             ◀️
         </a>
     {% endif%}
@@ -122,16 +128,17 @@ $(document).ready(function() {
             {% csrf_token %}
             <input type="hidden" name="form_type" value="jump">
             <input type="hidden" name="notebook" value={{notebook}}>
+            <input type="hidden" name="terms" value={{terms}}>
             <input  style="font-size:16px; width: 40px; text-align:right;" 
                 name="block_num" min=1 max={{block_obj.paginator.num_pages}} type="number" value={{ block_obj.number}}>
         </form>    
     </span> <span style="font-size:16px">of {{block_obj.paginator.num_pages}}</span>
 
     {% if block_obj.has_next %}
-        <a href="?page={{block_obj.next_page_number}}&notebook={{notebook}}">
+        <a href="?page={{block_obj.next_page_number}}&notebook={{notebook}}&terms={{terms}}">
             ▶️
         </a>
-        <a href="?page={{block_obj.paginator.num_pages}}&notebook={{notebook}}">
+        <a href="?page={{block_obj.paginator.num_pages}}&notebook={{notebook}}&terms={{terms}}">
             ⏭️
         </a>
     {% endif%}
