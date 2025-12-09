@@ -20,7 +20,7 @@ def render_texdown(value):
 
 @register.filter(name='render_tags')
 def render_tags(value):
-    result = ", ".join([tag.name for tag in value.names()])
+    result = ", ".join(list(value.names()))
     if result == '':
         result = "No Tags"
     return mark_safe(result)

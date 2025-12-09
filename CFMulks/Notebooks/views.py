@@ -149,7 +149,7 @@ def show_page_set(request):
         block_obj = paginator.get_page(page_number)
         page = block_obj.object_list[0]
         form = ScanTagsForm(instance=page)
-        block_range = paginator.get_elided_page_range(number=page_number, on_each_side=2, on_ends=2)
+        block_range = paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=2)
         response = render(request, 'Notebooks/block1.html', {'terms': terms, 'block_range':block_range, 'block_obj': block_obj, 'page': page, 'form': form, 'notebook': notebook_id })
         return response
 

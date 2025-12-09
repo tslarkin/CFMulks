@@ -16,7 +16,9 @@ class Command(BaseCommand):
             if not hits.exists():
                 current_notebook = Notebook.objects.create(name=file)
             else:
-                current_notebook = hits.first()
+                # comment out the next line if you want to rerun this for previously processed cases
+                continue
+                #current_notebook = hits.first()
             print(current_notebook)
             path = base+file
             current_notebook_pages = { p.file for p in current_notebook.scan_set.all() }

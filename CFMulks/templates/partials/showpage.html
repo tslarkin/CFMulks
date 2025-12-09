@@ -1,5 +1,6 @@
 {# All roads lead to this representation of a single record #}
 {% load static %}
+{% load notebook_extras %}
 
 <div id="page-{{page.name}}">
     <h2>{{page.notebook.roman_numeral}}{{page.name}}</h2>
@@ -17,18 +18,22 @@
             </div>
             <div>
                 <div class="field-title" >Tags</div>
-                <form  method="POST" id="tags">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                <table style="display: none">
-                    {{ view.formset.empty_form }}
-                </table>
+                {% if user.is_authenticated %} 
+                    <form  method="POST" id="tags">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    <table style="display: none">
+                        {{ view.formset.empty_form }}
+                    </table>
 
-                <table>
-                    {{ view.formset }}
-                </table>
-                </form>
-                {{ form.media.js }}
+                    <table>
+                        {{ view.formset }}
+                    </table>
+                    </form>
+                    {{ form.media.js }}
+                {% else %}
+                    {{ page.tags | render_tags }}
+                {% endif %}
             </div>
         </div>
         <figure>
