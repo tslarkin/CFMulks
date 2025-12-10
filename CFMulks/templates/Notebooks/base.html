@@ -3,6 +3,7 @@
 <html lang="en">
 {% block head %}
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>
     {% block title %}CFMulks Notebooks{% endblock %}
   </title>
@@ -16,7 +17,7 @@
 <body hx-config='{"allowEval": }' hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block header %}
 <header>
-    <h1 style="margin-top: 30px; font-size: 1.6rem; text-align:center; width:100%;">The Notebooks of Charles F. Mulks</h1>
+    <h1 style="margin-top: 30px; font-size: 1.6rem; line-height: 1.8rem; text-align:center; width:100%;">The Notebooks of Charles F. Mulks</h1>
     <nav>
     {% block nav %}
         {% if not request.path == '/home/' %}<a style="order: 0" href="/">Home</a>{% endif %}
