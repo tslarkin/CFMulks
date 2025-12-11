@@ -16,6 +16,11 @@
 {% load notebook_extras %}
 
 {% block content %}
+<script>
+  // Ensure strings are quoted in the output HTML
+  var notebook = "{{ notebook }}";
+</script>
+
 {% if not terms == '' %}
 <div style="font-size:30px;width=100%;text-align:center;">
     Search results for "{{terms}}"
@@ -24,11 +29,65 @@
 
 {% include "partials/showpage.html" %}
 
+    {{ block_obj.has_next|json_script:"has_next"}}
+    {{ block_obj.has_previous|json_script:"has_previous"}}
+    {% if block_obj.has_next %}
+    {{ block_obj.next_page_number|json_script:"next_page"}}
+    {% endif %}
+    {% if block_obj.has_previous %}
+    {{ block_obj.previous_page_number|json_script:"previous_page"}}
+    {% endif %}
 
 {% endblock content %}
 
 {% block footer %}
 <script>
+    var touchstartX = 0;
+    var touchendX = 0;
+    var gestureZone = document.getElementById('content'); // The element you want to track
+
+    gestureZone.addEventListener('touchstart', function(e) {
+        touchstartX = e.touches[0].screenX;
+    }, { once: true });
+
+    gestureZone.addEventListener('touchend', function(e) {
+        touchendX = e.changedTouches[0].screenX;
+        handleGesture(e);
+    }, { once: true });
+
+    function handleGesture(event) {
+        var swipeThreshold = 50; // Minimum distance for a swipe
+        var diffX = touchendX - touchstartX;
+        var url = "";
+        if (Math.abs(diffX) > swipeThreshold) {
+            has_next = JSON.parse(document.getElementById('has_next').textContent);
+            has_previous = JSON.parse(document.getElementById('has_previous').textContent);
+            if (diffX > 0) {
+                // Swiped right
+                console.log('Swiped right');
+                // Call a function to handle right swipe action
+                if (has_previous){ 
+                    previous_page = JSON.parse(document.getElementById('previous_page').textContent);
+                    url = `?page=${previous_page}&notebook=${notebook}`;
+                    console.log(url);
+                    window.location.href=url;
+                }
+            } else {
+                if (has_next) {
+                    next_page = JSON.parse(document.getElementById('next_page').textContent);
+                    url = `?page=${next_page}&notebook=${notebook}`;
+                    console.log(url);
+                    window.location.href=url;
+                }
+            }
+        }
+    }
+
+
+</script>
+
+<script>
+    
     $(document).on('select2:clear', function(e) {
     // Prevent the default Select2 removal behavior if you want to handle it manually
     //e.preventDefault(); 

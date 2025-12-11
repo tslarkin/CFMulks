@@ -133,6 +133,8 @@ figure {
     overflow-x: scroll;
     margin-inline-end: 0;
     margin-inline-start: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
     min-width: 300px;
     max-width: 800px;
     flex: 2 1 0;

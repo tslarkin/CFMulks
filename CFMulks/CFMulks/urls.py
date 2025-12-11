@@ -41,6 +41,7 @@ urlpatterns = [
     path('show_page_set/', views.show_page_set, name='show_page_set'),
     path('select2/', include('django_select2.urls', namespace='django_select2')),
     #path('edittags/<int:scan_id>', views.editTags, name='edittags'),
+    #path('swipe-action', views.swipe_action, name='swipe-action'),
     path(
         'tag-autocomplete/',
         views.TagAutocomplete.as_view(),
