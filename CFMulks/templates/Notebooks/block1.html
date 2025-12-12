@@ -45,20 +45,22 @@
     var touchstartX = 0;
     var touchendX = 0;
     var gestureZone = document.getElementById('content'); // The element you want to track
+    const controller = new AbortController();
+    const signal = controller.signal;
 
     gestureZone.addEventListener('touchstart', function(e) {
         touchstartX = e.touches[0].screenX;
-    }, { once: true });
+    }, { signal });
 
     gestureZone.addEventListener('touchend', function(e) {
         touchendX = e.changedTouches[0].screenX;
         handleGesture(e);
-    }, { once: true });
+    }, { signal });
 
     function handleGesture(event) {
         var swipeThreshold = 50; // Minimum distance for a swipe
         var diffX = touchendX - touchstartX;
-        var url = "";
+        var page = "";
         if (Math.abs(diffX) > swipeThreshold) {
             has_next = JSON.parse(document.getElementById('has_next').textContent);
             has_previous = JSON.parse(document.getElementById('has_previous').textContent);
@@ -67,18 +69,18 @@
                 console.log('Swiped right');
                 // Call a function to handle right swipe action
                 if (has_previous){ 
-                    previous_page = JSON.parse(document.getElementById('previous_page').textContent);
-                    url = `?page=${previous_page}&notebook=${notebook}`;
-                    console.log(url);
-                    window.location.href=url;
+                    page = JSON.parse(document.getElementById('previous_page').textContent);
                 }
             } else {
                 if (has_next) {
-                    next_page = JSON.parse(document.getElementById('next_page').textContent);
-                    url = `?page=${next_page}&notebook=${notebook}`;
-                    console.log(url);
-                    window.location.href=url;
+                    page = JSON.parse(document.getElementById('next_page').textContent);
                 }
+            }
+            if (page != "") {
+                url = `?page=${page}&notebook=${notebook}`;
+                console.log(url);
+                controller.abort();
+                window.location.href=url;
             }
         }
     }
