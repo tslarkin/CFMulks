@@ -17,7 +17,7 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from taggit.models import Tag
 from .forms import ScanTagsForm
 from dal import autocomplete
-from django.db.models import F, IntegerField, Func, Value
+from django.db.models import IntegerField
 from django.db.models.functions import Cast, Substr
 
 
