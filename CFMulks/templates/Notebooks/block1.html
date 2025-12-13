@@ -58,7 +58,7 @@
     }, { signal });
 
     function handleGesture(event) {
-        var swipeThreshold = 50; // Minimum distance for a swipe
+        var swipeThreshold = 200; // Minimum distance for a swipe
         var diffX = touchendX - touchstartX;
         var page = "";
         if (Math.abs(diffX) > swipeThreshold) {
