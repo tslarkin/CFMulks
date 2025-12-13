@@ -17,6 +17,9 @@ from django.http import JsonResponse, HttpResponseBadRequest
 from taggit.models import Tag
 from .forms import ScanTagsForm
 from dal import autocomplete
+from django.db.models import F, IntegerField, Func, Value
+from django.db.models.functions import Cast, Substr
+
 
 def search(request):
     return render(request, "Notebooks/search.html")
@@ -140,9 +143,11 @@ def show_page_set(request):
         numbers = request.session['filter']
         notebook_id = request.GET.get('notebook')
         if len(numbers) > 0:
-            pageset = Scan.objects.filter(pk__in=numbers).order_by('file')
+            pageset = Scan.objects.filter(pk__in=numbers)
         else:
-            pageset = Scan.objects.filter(notebook__id=notebook_id).order_by('file')
+            pageset = Scan.objects.filter(notebook__id=notebook_id).order_by(
+                Cast(Substr('file', 5, 4), output_field=IntegerField()), Substr('file', 9,1)
+            )
         page_number = request.GET.get('page') or '1'
         terms = request.GET.get('terms') or ''
         paginator = Paginator(pageset,1)
