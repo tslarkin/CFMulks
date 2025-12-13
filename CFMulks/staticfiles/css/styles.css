@@ -25,7 +25,7 @@ body {
     margin-bottom: 120px;
     display:block;
     font-family: 'Cormorant Garamond', serif;
-    font-size: 22px;
+    font-size: 23px;
     padding: 0 0px;
     max-width: 100vmax;
     line-height: 1.2em;
@@ -343,10 +343,6 @@ footer {
 
 
 @media(max-width:1366px) {
-    body {
-        font-size: 22px;
-    }
-    
     .showpage {
         column-gap: 10px
     }
@@ -360,9 +356,6 @@ footer {
     }
     h1 {
         margin-block-end: 10px;
-    }
-    body {
-        font-size: 22px;
     }
  
  }
