@@ -7,9 +7,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         base = '/Volumes/Users/tslarkin/Projects/CFMulks/CFMulks/static/img/'
-        for file in os.listdir(base):
-            if file[0] == '.':
-                continue
+        check = [f for f in os.listdir(base) if os.path.isdir(os.path.join(base, f))]
+        for file in check:
             # Every notebook has a unique name, therefore 
             # the query set can have only 0 or 1 hits.
             hits = Notebook.objects.filter(name = file)
