@@ -27,7 +27,7 @@ body {
     font-family: 'Cormorant Garamond', serif;
     font-size: 23px;
     padding: 0 0px;
-    max-width: 100vmax;
+    max-width: 100vw;
     line-height: 1.2em;
 }
 #content, header {
