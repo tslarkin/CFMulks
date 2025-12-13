@@ -21,7 +21,8 @@ class Scan(models.Model):
     tags = TaggableManager(blank=True)
 
     def __str__(self):
-        f"Scan {self.file}"
+        str = f"Scan {self.file}"
+        return str
 
     def name(self):
         x = re.match(r'IMG(_\d{4}.?)\.jpe?g', self.file)
