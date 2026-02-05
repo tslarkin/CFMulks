@@ -2,18 +2,10 @@
 
 {% if field == 'transcription' %}
 <textarea id="editing" style="width:100%" name="transcription" 
-	placeholder="Transcription" rows="20"  class="editfield">
-	{% if page.transcription %}
-		{{ page.transcription}}
-	{% endif %}
-</textarea>
+	placeholder="Transcription" rows="20"  class="editfield">{% if page.transcription %}{{page.transcription}}{% endif %}</textarea>
 {% elif field == 'description' %}
 <textarea id="editing" style="width:100%" name="description"
-	placeholder="Comment" rows="12"  class="editfield">
-	{% if page.description %}
-		{{ page.description}}
-	{% endif %}
-</textarea>
+	placeholder="Comment" rows="12"  class="editfield">{% if page.description %}{{ page.description}}{% endif %}</textarea>
 {% else %}
 {{ form.css }}
 <input id="editing" class="showfield" name="tags"

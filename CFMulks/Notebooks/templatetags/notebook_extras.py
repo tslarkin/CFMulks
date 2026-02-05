@@ -22,5 +22,5 @@ def render_texdown(value):
 def render_tags(value):
     result = ", ".join(list(value.names()))
     if result == '':
-        result = "No Tags"
+        result = ""
     return mark_safe(result)
